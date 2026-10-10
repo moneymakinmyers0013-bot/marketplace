@@ -5,6 +5,7 @@ import { randomUUID, timingSafeEqual } from "node:crypto";
 import { createClientIdentity } from "./client-identity.mjs";
 import { bestBid } from "./bids.mjs";
 import { createCatalog } from "./catalog-access.mjs";
+import { PgDiscoveryCatalog } from "./postgres/discovery-catalog.mjs";
 import { applicationStore } from "./application-store.mjs";
 import { Auth } from "./auth.mjs";
 import { preflight } from "./preflight.mjs";
@@ -345,7 +346,15 @@ export function createApi({ store, config, rpc, verifySignature }) {
         result = { id, status: "open" };
       } else if (route[0] === "operator") {
         operator();
-        if (route[1] === "reports" && req.method === "GET")
+        if (route[1] === "discovery" && req.method === "POST" && store.dialect === "postgres") {
+          const id = address(data.address);
+          if (typeof data.visible !== "boolean" || typeof data.verified !== "boolean" || data.tradable !== undefined)
+            throw new ApiError("INVALID_DISCOVERY_POLICY", "Explicit visibility and verification booleans required; settlement is separate");
+          if (!(await store.query("SELECT 1 FROM chain.nft_catalog WHERE chain=$1 AND address=$2", [config.chain, id])).rowCount)
+            throw new ApiError("NOT_FOUND", "Collection was not discovered", 404);
+          await store.query(`INSERT INTO app.nft_discovery_policy VALUES($1,$2,$3,$4) ON CONFLICT(chain,address) DO UPDATE SET visible=excluded.visible,verified=excluded.verified`, [config.chain, id, data.visible, data.verified]);
+          result = { updated: true, settlementEligible: false };
+        } else if (route[1] === "reports" && req.method === "GET")
           result = await app.reports();
         else if (route[1] === "reports" && req.method === "POST") {
           if (!["open", "resolved", "dismissed"].includes(data.status))
@@ -417,7 +426,13 @@ export function createApi({ store, config, rpc, verifySignature }) {
           ),
         };
       } else if (req.method === "GET") {
-        if (route[0] === "collections") {
+        if (route[0] === "discovery" && store.dialect === "postgres") {
+          const discovery = new PgDiscoveryCatalog(store, config.chain);
+          if (route[1] === "status" && route.length === 2) result = await discovery.status();
+          else if (route[1] === "collections" && route.length === 2) result = await discovery.collections(q);
+          else if (route[1] === "collections" && route[2] && route[3] === "tokens" && route.length === 4) result = await discovery.tokens(route[2], q);
+          else if (route[1] === "accounts" && route[2] && route[3] === "holdings" && route.length === 4) result = await discovery.holdings(route[2], q);
+        } else if (route[0] === "collections") {
           if (!route[1]) result = await catalog.collections();
           else if (!route[2]) result = await catalog.collection(route[1]);
           else if (route[2] === "tokens")

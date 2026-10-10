@@ -1,0 +1,759 @@
+{
+  "observedAt": "2026-10-10T13:52:56.444Z",
+  "runtime": "v22.23.3",
+  "provider": "https://starknet-rpc.publicnode.com",
+  "scope": "Bounded local review evidence; full-chain and token coverage remain unproven; no staging or production changes",
+  "acquisition": {
+    "observedAt": "2026-10-10T12:28:56.943Z",
+    "headObserved": {
+      "number": 16174639,
+      "hash": "0x1c9d9c95f2d20fcac28e2853895f17a8eb772e5b6b7702613bbb8982a42a146"
+    },
+    "ranges": [
+      {
+        "name": "genesis",
+        "start": 0,
+        "stop": 2,
+        "scan": {
+          "indexed": 2,
+          "hash": "0x4e1f77f39545afe866ac151ac908bd1a347a2a8a7d58bef1276db4f06fdf2f6",
+          "head": 16174640,
+          "blocks": 3,
+          "changes": 11,
+          "events": 0,
+          "rpcCalls": 11,
+          "rpcBytes": 39310,
+          "elapsedMs": 865,
+          "blocksPerSecond": 3.468208092485549,
+          "coverageStart": 0,
+          "discoveryRangeStartsAtGenesis": true
+        },
+        "classification": {
+          "classified": 11,
+          "samples": 22,
+          "supported": 0,
+          "unsupported": 22,
+          "failed": 0
+        },
+        "databaseRelationBytes": "352256",
+        "processRssBefore": 75694080,
+        "processRssAfter": 64126976
+      },
+      {
+        "name": "recent",
+        "start": 16174615,
+        "stop": 16174639,
+        "scan": {
+          "indexed": 16174639,
+          "hash": "0x1c9d9c95f2d20fcac28e2853895f17a8eb772e5b6b7702613bbb8982a42a146",
+          "head": 16174662,
+          "blocks": 25,
+          "changes": 0,
+          "events": 320,
+          "rpcCalls": 55,
+          "rpcBytes": 351628,
+          "elapsedMs": 22621,
+          "blocksPerSecond": 1.105167764466646,
+          "coverageStart": 16174615,
+          "discoveryRangeStartsAtGenesis": false
+        },
+        "classification": {
+          "classified": 25,
+          "samples": 25,
+          "supported": 0,
+          "unsupported": 25,
+          "failed": 0
+        },
+        "databaseRelationBytes": "720896",
+        "processRssBefore": 58523648,
+        "processRssAfter": 108429312
+      }
+    ]
+  },
+  "knownERC721": {
+    "observedAt": "2026-10-10T12:38:33.045Z",
+    "block": 16174968,
+    "hash": "0x467435b882fe62d0f447f022d05aad81f95e0fbbf0025bae2f387ec84460c38",
+    "collections": [
+      {
+        "name": "Realms",
+        "address": "0x7ae27a31bb6526e3de9cf02f081f6ce0615ac12a6d7b85ee58b8ad7947a2809",
+        "classHash": "0x42731c2355af9d59eda314ea3cca49ea3cc85173b2ca3c35c6c9df1c087cc43",
+        "confidence": "confirmed",
+        "standard": "erc721",
+        "binding": {
+          "address": "0x07ae27a31bb6526e3de9cf02f081f6ce0615ac12a6d7b85ee58b8ad7947a2809",
+          "standard": "ERC721",
+          "decoderId": "erc721-cairo1-oz-2",
+          "classHash": "0x42731c2355af9d59eda314ea3cca49ea3cc85173b2ca3c35c6c9df1c087cc43",
+          "selectorPath": [],
+          "ignoredSelectors": []
+        },
+        "eventLayouts": [
+          {
+            "name": "Transfer",
+            "path": "openzeppelin::token::erc721::erc721::ERC721Component::Transfer",
+            "selector": "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "keys": [
+              {
+                "name": "from",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "to",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "Approval",
+            "path": "openzeppelin::token::erc721::erc721::ERC721Component::Approval",
+            "selector": "0x134692b230b9e1ffa39098904722134159652b09c5bc41d88d6698779d228ff",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "approved",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "ApprovalForAll",
+            "path": "openzeppelin::token::erc721::erc721::ERC721Component::ApprovalForAll",
+            "selector": "0x6ad9ed7b6318f1bcffefe19df9aeb40d22c36bed567e1925a5ccde0536edd",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "operator",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "data": [
+              {
+                "name": "approved",
+                "type": "core::bool"
+              }
+            ]
+          },
+          {
+            "name": "Upgraded",
+            "path": "openzeppelin::upgrades::upgradeable::UpgradeableComponent::Upgraded",
+            "selector": "0x2db340e6c609371026731f47050d3976552c89b4fbb012941663841c59d1af3",
+            "keys": [],
+            "data": [
+              {
+                "name": "class_hash",
+                "type": "core::starknet::class_hash::ClassHash"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Loot Chests",
+        "address": "0x0572fe34a769058c62a66f0c4854d08ccfd21fcbb4f0b1685a1868b84c6ee266",
+        "classHash": "0x181c70595dd7db697c37ceb35c74fab69a037836b99cc80c17fd92a16289e26",
+        "confidence": "confirmed",
+        "standard": "erc721",
+        "binding": {
+          "address": "0x0572fe34a769058c62a66f0c4854d08ccfd21fcbb4f0b1685a1868b84c6ee266",
+          "standard": "ERC721",
+          "decoderId": "erc721-cairo1-oz-2",
+          "classHash": "0x181c70595dd7db697c37ceb35c74fab69a037836b99cc80c17fd92a16289e26",
+          "selectorPath": [],
+          "ignoredSelectors": []
+        },
+        "eventLayouts": [
+          {
+            "name": "Transfer",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::Transfer",
+            "selector": "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "keys": [
+              {
+                "name": "from",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "to",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "Approval",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::Approval",
+            "selector": "0x134692b230b9e1ffa39098904722134159652b09c5bc41d88d6698779d228ff",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "approved",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "ApprovalForAll",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::ApprovalForAll",
+            "selector": "0x6ad9ed7b6318f1bcffefe19df9aeb40d22c36bed567e1925a5ccde0536edd",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "operator",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "data": [
+              {
+                "name": "approved",
+                "type": "core::bool"
+              }
+            ]
+          },
+          {
+            "name": "Upgraded",
+            "path": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+            "selector": "0x2db340e6c609371026731f47050d3976552c89b4fbb012941663841c59d1af3",
+            "keys": [],
+            "data": [
+              {
+                "name": "class_hash",
+                "type": "core::starknet::class_hash::ClassHash"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Cosmetics",
+        "address": "0x01f36515d7d307c9d3e41df48f29e9a6b4bbc445d0fbdbbce944a4678cd52b02",
+        "classHash": "0x3786852cc518b276af050047b663b7d750f697dbb9e7c0046c06521d533c047",
+        "confidence": "confirmed",
+        "standard": "erc721",
+        "binding": {
+          "address": "0x01f36515d7d307c9d3e41df48f29e9a6b4bbc445d0fbdbbce944a4678cd52b02",
+          "standard": "ERC721",
+          "decoderId": "erc721-cairo1-oz-2",
+          "classHash": "0x3786852cc518b276af050047b663b7d750f697dbb9e7c0046c06521d533c047",
+          "selectorPath": [],
+          "ignoredSelectors": []
+        },
+        "eventLayouts": [
+          {
+            "name": "Transfer",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::Transfer",
+            "selector": "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "keys": [
+              {
+                "name": "from",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "to",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "Approval",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::Approval",
+            "selector": "0x134692b230b9e1ffa39098904722134159652b09c5bc41d88d6698779d228ff",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "approved",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "ApprovalForAll",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::ApprovalForAll",
+            "selector": "0x6ad9ed7b6318f1bcffefe19df9aeb40d22c36bed567e1925a5ccde0536edd",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "operator",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "data": [
+              {
+                "name": "approved",
+                "type": "core::bool"
+              }
+            ]
+          },
+          {
+            "name": "Upgraded",
+            "path": "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+            "selector": "0x2db340e6c609371026731f47050d3976552c89b4fbb012941663841c59d1af3",
+            "keys": [],
+            "data": [
+              {
+                "name": "class_hash",
+                "type": "core::starknet::class_hash::ClassHash"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Golden Token",
+        "address": "0x027838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885",
+        "confidence": "confirmed",
+        "standard": "erc721",
+        "binding": {
+          "address": "0x027838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "standard": "ERC721",
+          "decoderId": "erc721-cairo1-oz-2",
+          "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885",
+          "selectorPath": [],
+          "ignoredSelectors": []
+        },
+        "eventLayouts": [
+          {
+            "name": "Transfer",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::Transfer",
+            "selector": "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "keys": [
+              {
+                "name": "from",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "to",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "Approval",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::Approval",
+            "selector": "0x134692b230b9e1ffa39098904722134159652b09c5bc41d88d6698779d228ff",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "approved",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "token_id",
+                "type": "core::integer::u256"
+              }
+            ],
+            "data": []
+          },
+          {
+            "name": "ApprovalForAll",
+            "path": "openzeppelin_token::erc721::erc721::ERC721Component::ApprovalForAll",
+            "selector": "0x6ad9ed7b6318f1bcffefe19df9aeb40d22c36bed567e1925a5ccde0536edd",
+            "keys": [
+              {
+                "name": "owner",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "operator",
+                "type": "core::starknet::contract_address::ContractAddress"
+              }
+            ],
+            "data": [
+              {
+                "name": "approved",
+                "type": "core::bool"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "limitation": "Exact ABI event layout compatibility does not verify deployed implementation lineage"
+  },
+  "selectedMintReplay": {
+    "observedAt": "2026-10-10T13:52:56.444Z",
+    "source": "0x027838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+    "block": 2021301,
+    "hash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+    "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885",
+    "decoderId": "erc721-cairo1-oz-2",
+    "receiptRows": 160,
+    "projectedTokens": 160,
+    "quarantines": 0,
+    "owners": [
+      {
+        "tokenId": "1",
+        "indexedOwner": "0x0154c4a6e48b66bd77e8c7786e2de6a037af7104cfbec10f9fb2e5cedc0e56b1",
+        "directOwner": "0x0154c4a6e48b66bd77e8c7786e2de6a037af7104cfbec10f9fb2e5cedc0e56b1",
+        "matched": true
+      },
+      {
+        "tokenId": "10",
+        "indexedOwner": "0x03811acc9d5de9c40713c72e690412ab92814ccab12c39f7cdd52f1693180b2a",
+        "directOwner": "0x03811acc9d5de9c40713c72e690412ab92814ccab12c39f7cdd52f1693180b2a",
+        "matched": true
+      },
+      {
+        "tokenId": "100",
+        "indexedOwner": "0x0664e2de62463c8f349a4b9c8b45b5e90970b66e4dd1b942dfaac3e4047d072e",
+        "directOwner": "0x0664e2de62463c8f349a4b9c8b45b5e90970b66e4dd1b942dfaac3e4047d072e",
+        "matched": true
+      },
+      {
+        "tokenId": "101",
+        "indexedOwner": "0x01046e44faf09e4e69ba96180a545882e196c34ffcfc3598c4ab15a3a442d319",
+        "directOwner": "0x01046e44faf09e4e69ba96180a545882e196c34ffcfc3598c4ab15a3a442d319",
+        "matched": true
+      },
+      {
+        "tokenId": "102",
+        "indexedOwner": "0x066f04f184ddbc8e10d53540b724a336bda64222d916f277030ec9d99cf99460",
+        "directOwner": "0x066f04f184ddbc8e10d53540b724a336bda64222d916f277030ec9d99cf99460",
+        "matched": true
+      },
+      {
+        "tokenId": "103",
+        "indexedOwner": "0x010afc0a4f0625dc9f2de80b5fce67fa212776773848c795a218d6bb40589265",
+        "directOwner": "0x010afc0a4f0625dc9f2de80b5fce67fa212776773848c795a218d6bb40589265",
+        "matched": true
+      },
+      {
+        "tokenId": "104",
+        "indexedOwner": "0x06ef7b83398d045ca3d71e1533ab899cdda3b38cc26e6863610ed64ff50d125f",
+        "directOwner": "0x06ef7b83398d045ca3d71e1533ab899cdda3b38cc26e6863610ed64ff50d125f",
+        "matched": true
+      },
+      {
+        "tokenId": "105",
+        "indexedOwner": "0x018eadef1e2717e91f9107b894fc1b081cafc4b5c5083dad7471c45a8d454afb",
+        "directOwner": "0x018eadef1e2717e91f9107b894fc1b081cafc4b5c5083dad7471c45a8d454afb",
+        "matched": true
+      },
+      {
+        "tokenId": "106",
+        "indexedOwner": "0x01558beea1b77efa21d82c635b7540c75b88cc5dc777e79871bebde413438d12",
+        "directOwner": "0x01558beea1b77efa21d82c635b7540c75b88cc5dc777e79871bebde413438d12",
+        "matched": true
+      },
+      {
+        "tokenId": "107",
+        "indexedOwner": "0x0289b32c42af63fa508c76bdbb2250e447c5ba9bc938ab0a9629d25b1b8aedd0",
+        "directOwner": "0x0289b32c42af63fa508c76bdbb2250e447c5ba9bc938ab0a9629d25b1b8aedd0",
+        "matched": true
+      }
+    ],
+    "sampleRows": [
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 0,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x154c4a6e48b66bd77e8c7786e2de6a037af7104cfbec10f9fb2e5cedc0e56b1",
+            "0x1",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 9,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x3811acc9d5de9c40713c72e690412ab92814ccab12c39f7cdd52f1693180b2a",
+            "0xa",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 99,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x664e2de62463c8f349a4b9c8b45b5e90970b66e4dd1b942dfaac3e4047d072e",
+            "0x64",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 100,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x1046e44faf09e4e69ba96180a545882e196c34ffcfc3598c4ab15a3a442d319",
+            "0x65",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 101,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x66f04f184ddbc8e10d53540b724a336bda64222d916f277030ec9d99cf99460",
+            "0x66",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 102,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x10afc0a4f0625dc9f2de80b5fce67fa212776773848c795a218d6bb40589265",
+            "0x67",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 103,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x6ef7b83398d045ca3d71e1533ab899cdda3b38cc26e6863610ed64ff50d125f",
+            "0x68",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 104,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x18eadef1e2717e91f9107b894fc1b081cafc4b5c5083dad7471c45a8d454afb",
+            "0x69",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 105,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x1558beea1b77efa21d82c635b7540c75b88cc5dc777e79871bebde413438d12",
+            "0x6a",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      },
+      {
+        "chain": "SN_MAIN",
+        "blockNumber": 2021301,
+        "blockHash": "0x1608d7cebabe77bc782c01f12bf8dd93774ad748794639942bd8ba5b3497fe7",
+        "transactionHash": "0x779be6da7c1a75542f3fea3a4228b3a4f7e1897b866bd88a4bf0315221ab0f4",
+        "transactionIndex": 6,
+        "eventIndex": 106,
+        "canonical": true,
+        "raw": {
+          "from_address": "0x27838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+          "keys": [
+            "0x99cd8bde557814842a3121e8ddfd433a539b8c9f14bf31ebf108d12e6196e9",
+            "0x0",
+            "0x289b32c42af63fa508c76bdbb2250e447c5ba9bc938ab0a9629d25b1b8aedd0",
+            "0x6b",
+            "0x0"
+          ],
+          "data": []
+        },
+        "classHash": "0x2902aba920acb9478e9a01f46aa5adca58d4d31eba91a1bdb3b6d0020595885"
+      }
+    ],
+    "limitations": [
+      "Selected mint events in one full receipt block; other source events are outside this decoder check",
+      "No full source/chain coverage claim",
+      "No complete owner/balance/supply reconciliation",
+      "No ERC1155 live sample",
+      "No staging promotion"
+    ]
+  },
+  "deploymentExceptions": {
+    "observedAt": "2026-10-10T12:39:24.911Z",
+    "samples": [
+      {
+        "name": "Realms",
+        "source": "0x07ae27a31bb6526e3de9cf02f081f6ce0615ac12a6d7b85ee58b8ad7947a2809",
+        "rawEventCount": 6,
+        "unknownSelectors": [
+          "0x15a1da9334e8c3a4fb533251fc9c7040c67c241a784514f334626c6aca333bb",
+          "0x19fd3fe5d1e3466ebdebb5ab86689ae30c30392d1bd0e6c7a32bfdc1c278371",
+          "0x9d4a59b844ac9d98627ddba326ab3707a7d7e105fd03c777569d0f61a91f1e",
+          "0xcbefceffbc7467705e671634f490a0830e70c3f9440498ddaf68c6669b0c64"
+        ]
+      },
+      {
+        "name": "Golden Token",
+        "source": "0x027838dea749f41c6f8a44fcfa791788e6101080c1b3cd646a361f653ad10e2d",
+        "rawEventCount": 1,
+        "unknownSelectors": [
+          "0x1390fd803c110ac71730ece1decfc34eb1d0088e295d4f1b125dda1e0c5b9ff"
+        ]
+      }
+    ],
+    "limitation": "Full deployment-adjacent source replay withheld output on unknown setup events"
+  },
+  "artifactDigests": {
+    "live-evidence.json": "f71b470903acd92f9773396c23b526520b45c8b18d8ec56fc4855ff947586889",
+    "known-contracts-evidence.json": "893cfe989c3cea0feb3c83b9503c378a8d7a8949f39139918772f07c0c23111c",
+    "positive-transfer-evidence.json": "6628ed093f5897aa33377e27c5fd708dadf12a54e4ebcaf9e861bdf316cc420f",
+    "positive-nft-evidence.json": "c27138a263a74957ed2bdab0fdb58cf748a15ee6e3f9bf4b644bcd33cc5b8669"
+  },
+  "limitations": [
+    "Small one-provider RPC samples do not establish full-chain completeness, sustained throughput, quota or cost",
+    "No complete source owner/balance/approval/supply reconciliation",
+    "No live ERC1155 or legacy corpus",
+    "No production or staging changes; staging held by user",
+    "Full epic #108 and issues #109\u2013#118 remain open"
+  ]
+}

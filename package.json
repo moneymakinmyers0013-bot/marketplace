@@ -45,7 +45,8 @@
     "railway:variable": "node scripts/railway/set-variable.mjs",
     "railway:edge": "node scripts/railway/edge-rules.mjs",
     "backend:pg:test": "node --test services/marketplace-backend/test/postgres/*.test.mjs",
-    "backend:pg": "node services/marketplace-backend/src/postgres/cli.mjs"
+    "backend:pg": "node services/marketplace-backend/src/postgres/cli.mjs",
+    "backend:discovery": "node services/marketplace-backend/src/discovery-cli.mjs"
   },
   "dependencies": {
     "@biblio/marketplace": "workspace:*",

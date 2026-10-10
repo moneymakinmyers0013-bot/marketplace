@@ -9,6 +9,8 @@ import { Catalog } from "../../src/catalog.mjs";
 import { applicationStore } from "../../src/application-store.mjs";
 import { address, orderKey } from "../../src/domain.mjs";
 test("PostgreSQL and SQLite replay the complete order lifecycle with identical accounting, activity, notifications and reorg state", async (t) => {
+  const fixedNow = Date.now();
+  t.mock.method(Date, "now", () => fixedNow);
   const db = await testDatabase(t),
     pool = db.pool();
   await migrate(pool);

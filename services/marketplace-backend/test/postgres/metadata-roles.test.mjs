@@ -230,6 +230,8 @@ test("metadata downloads overlap within a bounded pool and retain cached mutable
   await store.applyBlock(b);
   let active = 0,
     peak = 0;
+  let releaseOverlap;
+  const overlap = new Promise(resolve => { releaseOverlap = resolve; });
   const rpc = {
     contract: async () =>
       uriFelts({ name: "Realm", image: "https://example.org/realm.svg" }),
@@ -237,7 +239,11 @@ test("metadata downloads overlap within a bounded pool and retain cached mutable
   const fetchResource = async () => {
     active++;
     peak = Math.max(active, peak);
-    await new Promise((r) => setTimeout(r, 20));
+    if (active >= 2) releaseOverlap();
+    await Promise.race([overlap, new Promise((_, reject) => {
+      const timer = setTimeout(() => reject(new Error("Metadata fetches did not overlap")), 10000);
+      timer.unref();
+    })]);
     active--;
     return { bytes: Buffer.from("<svg/>"), contentType: "image/svg+xml" };
   };

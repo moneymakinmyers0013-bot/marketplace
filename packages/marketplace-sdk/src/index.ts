@@ -5,6 +5,7 @@ export {
 } from "@tanstack/query-core";
 export * from "./client.js";
 export * from "./types.js";
+export * from "./discovery.js";
 export * from "./protocol.js";
 export * from "./currencies.js";
 export * from "./pending.js";

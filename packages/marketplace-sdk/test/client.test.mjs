@@ -5,6 +5,18 @@ const response = (data) =>
   new Response(JSON.stringify({ data }), {
     headers: { "content-type": "application/json" },
   });
+test("discovery reads preserve chain scope, pagination and lossless holdings without trading eligibility", async () => {
+  const paths = [];
+  const client = createMarketplaceClient({ apiUrl: "https://indexer.example", chain: "LOCAL", chainId: "0x1",
+    fetch: async url => { paths.push(new URL(url)); return response({ items: [{ tokenId: "9007199254740993", balance: "340282366920938463463374607431768211456", settlementEligible: false }], nextCursor: "next" }); } });
+  const page = await client.discovery.holdings("0x2", { limit: 1, cursor: "prior" });
+  assert.equal(page.items[0].tokenId, "9007199254740993");
+  assert.equal(page.items[0].balance, "340282366920938463463374607431768211456");
+  assert.equal(page.items[0].settlementEligible, false);
+  assert.equal(paths[0].pathname, "/v1/chains/LOCAL/discovery/accounts/0x2/holdings");
+  assert.equal(paths[0].searchParams.get("cursor"), "prior");
+  client.dispose();
+});
 test("TanStack deduplicates reads and isolates clients sharing a query cache", async () => {
   let calls = 0;
   const cache = new QueryClient();

@@ -43,11 +43,13 @@ export function analyzeClass(contractClass) {
   const cairo = contractClass?.sierra_program ? 1 : 0;
   const functions = new Set();
   const events = [];
+  const eventEnums = [];
   const walk = (items) => {
     for (const item of items ?? []) {
       if (item.type === "function" || item.type === "l1_handler")
         functions.add(item.name);
       else if (item.type === "interface") walk(item.items);
+      else if (item.type === "event" && item.kind === "enum") eventEnums.push(item);
       else if (item.type === "event" && item.kind === "struct") {
         const members = item.members ?? [];
         events.push({
@@ -82,14 +84,19 @@ export function analyzeClass(contractClass) {
   return {
     cairoVersion: cairo,
     functionCount: functions.size,
+    eventEnvelope: cairo === 0 ? "flat" : eventEnums.length &&
+      eventEnums.every(e => e.variants?.every(v => v.kind === "flat" ||
+        (events.some(s => s.path === v.type) && v.name === lastSegment(v.type)) )) ? "flat" : "unreviewed",
     methodAliases,
     eventLayouts: events.filter((e) =>
       [
         "Transfer",
+        "Approval",
         "TransferSingle",
         "TransferBatch",
         "Upgraded",
         "ApprovalForAll",
+        "URI",
       ].includes(e.name),
     ),
     proxyHint:
@@ -142,7 +149,9 @@ async function probeInterface(rpc, address, blockId, entry, id) {
     },
     blockId,
   ]);
-  return BigInt(res?.[0] ?? 0) === 1n;
+  if (!Array.isArray(res) || res.length !== 1 || ![0n, 1n].includes(BigInt(res[0])))
+    throw new Error("Invalid interface Boolean response");
+  return BigInt(res[0]) === 1n;
 }
 
 /**
@@ -318,6 +327,7 @@ export async function classifyContract(
     probes,
     methodAliases: info.methodAliases,
     eventLayouts: info.eventLayouts,
+    eventEnvelope: info.eventEnvelope,
   };
 }
 

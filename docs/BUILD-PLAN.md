@@ -176,6 +176,27 @@ Preserve single-currency checkout and maximum 25 NFTs. Across approved currencie
 
 Trait/criteria offers, private/reserved listings, watchlists and richer profiles, email/push notifications, portfolio NFT transfers, permissionless collection onboarding, ERC-1155/partial fills, signed gasless orders, auctions and bundles are outside this launch plan. Prioritize them by demonstrated demand.
 
+### Starknet-wide discovery follow-up — local review slice, 10 October 2026
+
+[Epic #108](https://github.com/BibliothecaDAO/marketplace/issues/108) adds a
+separate PostgreSQL discovery journal, strict reviewed NFT adapters, source-local
+reference replay, visibility-gated public SDK/API reads, bounded textual metadata
+enrichment and the Storybook-verified `/discovery` route. Existing settlement
+allowlists and curated scanner behavior remain authoritative. Discovery never
+enables trading; ERC-1155 is holdings-only.
+
+This is an implementation slice awaiting review, not epic completion or a
+production rollout. Full-chain acquisition, resumable chunked source jobs,
+independent complete owner/balance/supply reconciliation, broader legacy/custom
+coverage, metadata queue fairness and operational capacity/restore/soak evidence
+remain open. The user instructed “Continue local work; hold staging” on
+10 October 2026. No staging or production changes are included.
+
+[The discovery runbook](NFT-DISCOVERY.md) records the implemented interfaces,
+bounds, measured mainnet samples and the remaining acceptance gates for
+#109–#118. The small public-RPC measurements do not establish a provider quota,
+cost budget or a full-chain service target.
+
 Trait offers need a separate decision about fixed token-set membership versus live on-chain predicates, particularly for mutable game attributes. A backend trait match cannot authorize spending. Features that change immutable contract semantics may require another deployment; do not pretend they are merely frontend additions.
 
 ## 4. Architecture and ownership

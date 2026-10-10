@@ -65,6 +65,8 @@ export async function provisionRoles(pool, roles) {
       `GRANT INSERT,UPDATE,DELETE ON market.token_metadata,market.metadata_jobs,market.attributes TO ${metadata}`,
     );
     await client.query(`GRANT INSERT ON media.assets TO ${metadata}`);
+    await client.query(`GRANT SELECT ON chain.nft_tokens,chain.nft_source_projections,chain.nft_classifications,chain.nft_metadata_cache TO ${metadata}`);
+    await client.query(`GRANT INSERT,UPDATE ON chain.nft_metadata_cache TO ${metadata}`);
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");

@@ -10,6 +10,7 @@ import type {
   IndexStatus,
 } from "./types.js";
 import { createTrades } from "./trades.js";
+import type { DiscoveryCollection, DiscoveryToken, DiscoveryHolding, DiscoveryPage, DiscoveryStatus } from "./discovery.js";
 import {
   TransactionCoordinator,
   type AccountAdapter,
@@ -310,6 +311,12 @@ export function createMarketplaceClient(options: MarketplaceOptions) {
     contract,
     config,
     status: () => request<IndexStatus>("/indexer/status"),
+    discovery: {
+      collections: (query: Query = {}) => request<DiscoveryPage<DiscoveryCollection>>("/discovery/collections", query),
+      tokens: (address: string, query: Query = {}) => request<DiscoveryPage<DiscoveryToken>>(`/discovery/collections/${address}/tokens`, query),
+      holdings: (account: string, query: Query = {}) => request<DiscoveryPage<DiscoveryHolding>>(`/discovery/accounts/${account}/holdings`, query),
+      status: () => request<DiscoveryStatus>("/discovery/status"),
+    },
     collections: {
       list: () => request<ApiCollection[]>("/collections"),
       get: (address: string) =>

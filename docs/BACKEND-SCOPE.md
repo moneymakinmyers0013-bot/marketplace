@@ -30,6 +30,33 @@ Keep the current marketplace UI. Give it a backend we operate that can reconstru
 
 The October [current-state assessment](./INDEXER-CURRENT-STATE-2026-10-06.md) remains the historical inventory. Its Torii recommendation is superseded by the user's custom-indexer decision. PR #92 is a source of requirements and selected fixtures/interface ideas; its indexing implementation is excluded. This scope does not silently convert the prior branch's “accepted” ADR into user approval.
 
+### Discovery extension — bounded local implementation, 10 October 2026
+
+The [Starknet discovery epic](https://github.com/BibliothecaDAO/marketplace/issues/108)
+authorizes a future catalog alongside the curated trading registry. Migration
+005 places canonical discovery, classification, source projections and exact NFT
+holdings in separate `chain.nft_*` tables. Durable visibility/verification lives
+in `app.nft_discovery_policy`; cached textual metadata is retained across reorgs
+and selected only when generation and metadata revision match.
+
+The discovery scanner acquires a complete receipt/state-diff window once for all
+discovered sources. Its PostgreSQL writer coordinates by chain with advisory
+transactions and canonical checkpoint comparisons. Reference replay changes only
+one discovered source; the curated scanner, market orders and checkout policy are
+unchanged. This reader is not yet the deployed curated scanner's shared live
+acquisition service. Sources over the replay budget require future chunked jobs.
+
+Public `/discovery/*` API and SDK methods expose only operator-published
+collections and report unproven token coverage. Unknown layouts, custom events,
+ambiguous replacement blocks and projection errors remain explicit. Matching an
+OpenZeppelin library event layout does not verify deployed implementation lineage.
+Metadata fetches use the existing unsafe-destination protections, bounded retries
+and fixed-block URI reads; no origin media is fetched by this extension.
+
+See [NFT-DISCOVERY.md](NFT-DISCOVERY.md) for commands, API contracts and all open
+acceptance gates. Staging and production work are held by the user; this local
+slice does not establish service capacity or complete reconciliation.
+
 The user selected replacement contracts after the [contract assessment](./CONTRACT-ASSESSMENT-2026-10-06.md). The [accepted architecture decision](./adr/0001-standalone-cairo-marketplace.md) fixes the direction; [contract scope](./CONTRACT-SCOPE.md) defines the proposed economic terms, ABI and events. The new-market backend has no Dojo decoder. Legacy history or cancellation support is separately bounded migration work.
 
 ### Dependency contract

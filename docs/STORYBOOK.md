@@ -35,6 +35,7 @@ When a compatible Chromium is already installed locally, set `CHROMIUM_EXECUTABL
 - **Wallet:** disconnected/connected header, connect/disconnect, rejection, missing extension and pending approval.
 - **Marketplace UX:** responsive header, wallet entry points, currency-labelled prices, mobile filters, collapsible statistics, single purchase action, activity provenance, public status and wallet identity.
 - **Trading:** cart contents, disabled checkout, removal, invalid listing, wallet rejection and success; offer proceeds confirmation; listing/token/collection offers and repricing; funded/empty/partial/unavailable bids; transaction status and delayed indexing.
+- **Discovery:** browse-only NFT observations, collection addresses, token metadata states, account balances, coverage checkpoints and query-scoped pagination.
 
 Use the Interactions panel to step through a story's play function, the Accessibility panel to inspect findings, and the viewport/theme controls for visual review. Automated accessibility is a useful gate, not a complete manual accessibility review.
 
@@ -294,3 +295,28 @@ pending prices. Browser review includes 390, 768 and 1440px layouts; a delayed
 local fixture API verifies home → collection → token and portfolio loading to
 content transitions. Wallet-only data states use isolated stories/tests; no live
 wallet transaction is required for this presentation change.
+
+## Browse-only NFT discovery
+
+`Discovery/NFT index` develops the controlled production `DiscoveryView` used by
+`/discovery`. Stories cover default, initial loading, empty, service error,
+unpublished/unsupported collection, tokens with ready/pending/failed metadata,
+account holdings, missing/invalid account input, expired cursors, pagination,
+background refresh and a 320px viewport. The view shows exact address, token ID,
+supply, balance, checkpoint and generation strings. Metadata is text only.
+
+The coverage panel and every result make incomplete history and browse-only
+settlement policy explicit. Empty results do not imply an account has no NFTs.
+Collection controls browse the discovery token endpoint; they do not link to
+trading collection pages. Address verification does not establish token coverage.
+
+Browser review checked collection, token and holdings layouts at 320, 768 and
+1440px, and loading, empty, error, unsupported, pagination and refresh states at
+the same widths. Search submission by keyboard, visible focus, collection
+selection, coverage disclosure, retry and pagination callbacks are exercised in
+the stories. All 13 stories pass interaction and accessibility tests, and the
+Storybook build passes. The route integration tests use the real SDK and React
+reads against HTTP fixtures to check query isolation, cursor reset, address
+validation and expired-generation recovery. App browser checks use fixture HTTP
+responses; they do not establish production indexing completeness or settlement
+eligibility.
