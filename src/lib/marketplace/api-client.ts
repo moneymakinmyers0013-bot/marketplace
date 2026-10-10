@@ -21,10 +21,11 @@ export async function marketplaceRequest<T>(
   path: string,
   query: Record<string, unknown> = {},
   body?: unknown,
+  signal?: AbortSignal,
 ): Promise<T> {
   const client = getAppMarketplaceClient();
   try {
-    return await client.request<T>(path, query, body);
+    return await client.request<T>(path, query, body, signal);
   } finally {
     if (typeof window === "undefined") client.dispose();
   }
@@ -91,7 +92,7 @@ const val = (v: string) =>
       : /^\d+$/.test(v) && Number.isSafeInteger(Number(v))
         ? Number(v)
         : v;
-export async function fetchCollectionTokens(o: FetchCollectionTokensOptions) {
+export async function fetchCollectionTokens(o: FetchCollectionTokensOptions, signal?: AbortSignal) {
   const filters =
     o.filters ??
     Object.entries(o.attributeFilters ?? {}).map(([name, values]) => ({
@@ -112,6 +113,7 @@ export async function fetchCollectionTokens(o: FetchCollectionTokensOptions) {
       q: o.q?.trim() || undefined,
       listedOnly: o.listedOnly ? true : undefined,
     },
+    undefined, signal,
   );
   return {
     page: { tokens: page.items.map(tokenFromApi), nextCursor: page.nextCursor },
@@ -180,9 +182,10 @@ type Facet = {
 export async function fetchTraitNamesSummary(o: {
   address: string;
   defaultProjectId?: string;
-}) {
+}, signal?: AbortSignal) {
   const facets = await marketplaceRequest<Facet[]>(
     `/collections/${o.address}/traits`,
+    {}, undefined, signal,
   );
   return {
     pages: [
@@ -234,9 +237,10 @@ export const ownedClient = {
       await marketplaceRequest<ApiCollection>(`/collections/${o.address}`),
     );
   },
-  async getToken(o: TokenDetailsOptions) {
+  async getToken(o: TokenDetailsOptions, signal?: AbortSignal) {
     const t = await marketplaceRequest<ApiToken>(
       `/tokens/${o.collection}/${BigInt(o.tokenId.includes(":") ? o.tokenId.split(":").at(-1)! : o.tokenId)}`,
+      {}, undefined, signal,
     );
     return {
       token: tokenFromApi(t),
@@ -269,7 +273,7 @@ export const ownedClient = {
     );
     return page.items.map(orderFromApi);
   },
-  async listCollectionListings(o: CollectionOrdersOptions) {
+  async listCollectionListings(o: CollectionOrdersOptions, signal?: AbortSignal) {
     const page = await marketplaceRequest<ApiPage<ApiOrder>>(
       `/collections/${o.collection}/listings`,
       {
@@ -278,6 +282,7 @@ export const ownedClient = {
         currency: o.currency ?? DEFAULT_CURRENCY,
         cursor: o.cursor,
       },
+      undefined, signal,
     );
     return page.items.map(orderFromApi);
   },

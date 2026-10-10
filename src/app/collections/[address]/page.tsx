@@ -1,17 +1,13 @@
 import { CollectionPageSkeleton } from "@/components/marketplace/loading-state";
 import { Suspense } from "react";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import type { Metadata } from "next";
-import { CollectionRouteContainer } from "@/features/collections/collection-route-container";
-import { getMarketplaceRuntimeConfig } from "@/lib/marketplace/config";
-import { prefetchTraitNamesSummary } from "@/lib/marketplace/trait-summary-prefetch";
-import { makeQueryClient } from "@/lib/marketplace/query-client";
+import { CollectionPageData } from "@/features/collections/collection-page-data";
 import { buildMarketplacePageMetadata, shareCardImage } from "@/lib/seo/metadata";
 import { collectionShareCopy } from "@/lib/seo/share-copy";
 
 type CollectionPageProps = {
   params: Promise<{ address: string }>;
-  searchParams: Promise<{ cursor?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function CollectionPage({
@@ -19,24 +15,13 @@ export default async function CollectionPage({
   searchParams,
 }: CollectionPageProps) {
   const { address } = await params;
-  const { cursor } = await searchParams;
-  const queryClient = makeQueryClient();
-  const selectedCollection = getMarketplaceRuntimeConfig().collections.find(
-    (collection) => collection.address === address,
-  );
-
-  await prefetchTraitNamesSummary(queryClient, {
-    address,
-    projectId: selectedCollection?.projectId,
-  });
+  const search = await searchParams;
 
   return (
     <main className="flex min-h-screen w-full items-start px-4 pb-6 sm:px-6">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<CollectionPageSkeleton />}>
-          <CollectionRouteContainer address={address} cursor={cursor ?? null} />
-        </Suspense>
-      </HydrationBoundary>
+      <Suspense fallback={<CollectionPageSkeleton />}>
+        <CollectionPageData address={address} search={search} />
+      </Suspense>
     </main>
   );
 }

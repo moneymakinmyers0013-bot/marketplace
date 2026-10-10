@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect } from "storybook/test";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { prefetchCollectionPage } from "@/lib/marketplace/public-prefetch";
 import { CollectionStatsStrip } from "./collection-stats-strip";
 import { CURRENCY, useScenario } from "../../../.storybook/scenario";
 
@@ -46,4 +48,19 @@ export const Loading: Story = {
 
 export const Narrow: Story = {
   globals: { viewport: { value: "narrow", isRotated: false } },
+};
+
+export const Prefetched: Story = {
+  loaders: [async () => {
+    const client = new QueryClient();
+    try {
+      await prefetchCollectionPage(client, { address: "0xa", currency: CURRENCY, params: new URLSearchParams("tab=analytics") });
+      return { state: dehydrate(client) };
+    } finally { client.clear(); }
+  }],
+  render: (args, { loaded }) => <HydrationBoundary state={loaded.state}><CollectionStatsStrip {...args} /></HydrationBoundary>,
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText("523")).toBeVisible();
+    await expect(canvas.queryByRole("status", { name: "Loading statistic" })).not.toBeInTheDocument();
+  },
 };

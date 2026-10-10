@@ -83,7 +83,7 @@ describe("collection offers panel", () => {
       tokenMatch: undefined,
       limit: 25,
       cursor: undefined,
-    });
+    }, undefined, expect.any(AbortSignal));
   });
 
   it("renders each offer with amount, kind, maker, expiry and availability", async () => {
@@ -195,7 +195,7 @@ describe("collection offers panel", () => {
         tokenMatch: undefined,
         limit: 25,
         cursor: "cursor-2",
-      }),
+      }, undefined, expect.any(AbortSignal)),
     );
     expect(screen.getByRole("button", { name: /loading more/i })).toBeDisabled();
 

@@ -434,7 +434,17 @@ hero loading. The originals total 21,586,372 bytes; the seven 256px variants tot
 worker and external NFT URLs are unchanged. Image fallback/priority tests,
 relevant Storybook/a11y tests (38 combined tests), typecheck, lint and both builds
 pass. Artwork stories checked at 390/639/640/768/1440px; fixture home at
-390/768/1440px. Server prefetching, startup and navigation improvements are next.
+390/768/1440px. Priority 2 is implemented: request-local public collection prefetching under
+Suspense, shared deployment-aware keys and URL-derived token queries, and a
+1.5-second cancellation budget. Prefetched assets render in server HTML before
+effects; the initial URL cursor is also passed to the grid. Reads use the SDK
+transport, preserve existing public snapshot freshness windows, and add no shared
+server cache of trading or authenticated state. Unit hydration/filter/currency/
+deployment/timeout checks and collection stories pass, as do typecheck, lint and
+both builds. Browser inspection of a filtered collection found only config and
+advisory sweep requests after hydration, with no repeated collection/token/stat
+reads. This is fixture integration evidence, not production latency validation.
+Home/token prefetching, startup and navigation improvements are next.
 
 ### Release preparation — 7 October 2026
 

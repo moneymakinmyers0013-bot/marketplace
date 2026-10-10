@@ -126,6 +126,7 @@ function collectionHeaderImage(metadata: unknown) {
 
 export function CollectionRouteView({
   address,
+  cursor,
   collections,
   activeFilters,
   sortMode = "price-asc",
@@ -350,6 +351,7 @@ export function CollectionRouteView({
               />
           }>
             <CollectionTokenGrid
+              cursor={cursor}
               key={sweepScopeKey}
               activeFilters={resolvedActiveFilters}
               address={address}

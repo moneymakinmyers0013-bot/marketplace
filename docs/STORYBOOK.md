@@ -354,3 +354,10 @@ reviewed derivatives from the original files using pinned development-only sharp
 Thumbnail `sizes` are 40px, spotlight 320px, cards use viewport-based widths, and
 hero banners use 100vw with eager/high priority. Browsers may reuse a larger cached
 variant rather than download a smaller one.
+
+`Marketplace/Collection stats/Prefetched` exercises the same hydrated public query
+cache used by the collection route. It renders populated figures without initial
+loading regions; existing loading, empty and error stories remain applicable.
+Prefetched stats and the filtered fixture collection were reviewed at
+390/768/1440px. Query hydration tests cover independent currency, filter, cursor
+and deployment identities plus cancellation of slow reads.

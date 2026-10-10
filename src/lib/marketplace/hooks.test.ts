@@ -94,6 +94,7 @@ describe("marketplace hooks", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(mockFetchCollectionTokens).toHaveBeenCalledWith(
       expect.objectContaining({ address: "0xabc", limit: 12, fetchImages: true }),
+      expect.any(AbortSignal),
     );
     expect(result.current.data).toBe(pageData);
   });
@@ -403,6 +404,7 @@ describe("marketplace hooks", () => {
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(mockFetchTraitNamesSummary).toHaveBeenCalledWith(
         expect.objectContaining({ address: "0xabc", defaultProjectId: "project-a" }),
+        expect.any(AbortSignal),
       );
       expect(result.current.data).toEqual([
         { traitName: "Background", valueCount: 2 },

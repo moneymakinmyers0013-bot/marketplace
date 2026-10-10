@@ -1,5 +1,6 @@
 import { fn } from "storybook/test";
 import { CURRENCY, fixtureConfig, useScenario } from "../scenario";
+export const DEFAULT_CURRENCY = "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d";
 const DAY = 86400;
 const NOW = 1_760_000_000;
 const ETH = 10n ** 18n;
