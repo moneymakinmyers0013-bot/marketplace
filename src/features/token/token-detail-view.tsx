@@ -12,7 +12,8 @@ import { prepareCancellation } from "@biblio/marketplace";
 import { TokenMedia } from "@/components/marketplace/token-media";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { SectionHeader } from "@/components/marketplace/section-header";
 import { useAddToCartFeedback } from "@/features/cart/hooks/use-add-to-cart-feedback";
 import {
   cartItemFromTokenListing,
@@ -145,6 +146,7 @@ export function TokenDetailView({
   const [composer, setComposer] = useState<ComposerKind | null>(null);
   const [dismissedShareFor, setDismissedShareFor] = useState<string | null>(null);
   const composerId = useId();
+  const sectionId = useId();
 
   const offerItems = (
     offers.data?.pages.flatMap((page) => page.items) ?? []
@@ -224,10 +226,59 @@ export function TokenDetailView({
   const toggleComposer = (kind: ComposerKind) =>
     setComposer((current) => (current === kind ? null : kind));
 
+  const tokenLabel = `#${displayTokenId(token)}`;
+  const offerAction = (
+    <Button
+      className="min-h-11 w-full"
+      variant={composer === "token_offer" || cheapest ? "outline" : "default"}
+      aria-expanded={composer === "token_offer"}
+      aria-controls={composerId}
+      onClick={() => toggleComposer("token_offer")}
+    >
+      {composer === "token_offer" ? "Close" : "Make offer"}
+    </Button>
+  );
+  const ownerActions = (
+    <>
+      <Button
+        className="min-h-11 w-full"
+        variant={composer === "listing" ? "outline" : "default"}
+        aria-expanded={composer === "listing"}
+        aria-controls={composerId}
+        onClick={() => toggleComposer("listing")}
+      >
+        {composer === "listing" ? "Close" : "List for sale"}
+      </Button>
+      {myListing ? (
+        <Button
+          variant="destructive"
+          className="min-h-11 w-full"
+          disabled={trade.busy}
+          onClick={() =>
+            void trade.execute(
+              (marketplace) =>
+                prepareCancellation(
+                  {
+                    marketplace,
+                    chain: trade.config!.chain,
+                    account: trade.address!,
+                  },
+                  [myListing.id],
+                ),
+              "cancel",
+            )
+          }
+        >
+          Cancel listing
+        </Button>
+      ) : null}
+    </>
+  );
+
   return (
-    <div className="mx-auto max-w-7xl space-y-6" data-testid="token-detail">
-      <header className="space-y-3">
-        <nav aria-label="Breadcrumb" className="text-sm">
+    <div className="mx-auto max-w-7xl space-y-8" data-testid="token-detail">
+      <header className="space-y-2">
+        <nav aria-label="Breadcrumb" className="-mt-2 text-sm">
           <Link
             href={`/collections/${address}`}
             className={`inline-flex min-h-11 items-center gap-1 text-muted-foreground transition-colors hover:text-foreground ${focusRing}`}
@@ -236,45 +287,54 @@ export function TokenDetailView({
             <span>{collectionName}</span>
           </Link>
         </nav>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <h1 className="text-3xl leading-tight sm:text-4xl">{name}</h1>
-          <Badge variant="outline" className="font-mono text-xs">
-            #{displayTokenId(token)}
-          </Badge>
-          <Badge variant="outline">ERC-721</Badge>
-          <ShareMenu target={shareTarget} className="sm:ml-auto" />
-        </div>
-        <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="realm-kicker text-xs">Owner</span>
-          {owner ? (
-            <Link
-              href={`/profile/${owner}`}
-              title={owner}
-              className={`inline-flex min-h-11 items-center font-mono text-foreground underline-offset-4 hover:underline ${focusRing}`}
-            >
-              {formatAddress(owner)}
-            </Link>
-          ) : (
-            <span className="inline-flex min-h-11 items-center text-muted-foreground">
-              Not indexed
+        <div className="space-y-1">
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="market-page-title min-w-0 break-words">{name}</h1>
+            <ShareMenu target={shareTarget} className="shrink-0" />
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 text-sm">
+            {/* The name usually carries the token number already. */}
+            {name.includes(tokenLabel) ? null : (
+              <span className="font-mono text-muted-foreground">
+                {tokenLabel}
+              </span>
+            )}
+            <span className="market-chip text-muted-foreground">ERC-721</span>
+            <span className="inline-flex items-center gap-2">
+              <span className="market-label">Owner</span>
+              {owner ? (
+                <Link
+                  href={`/profile/${owner}`}
+                  title={owner}
+                  className={`inline-flex min-h-11 items-center font-mono text-foreground underline decoration-muted-foreground/50 underline-offset-4 hover:decoration-current ${focusRing}`}
+                >
+                  {formatAddress(owner)}
+                </Link>
+              ) : (
+                <span className="inline-flex min-h-11 items-center text-muted-foreground">
+                  Not indexed
+                </span>
+              )}
+              {owner && isOwner ? <Badge variant="secondary">You</Badge> : null}
             </span>
-          )}
-          {owner && isOwner ? <Badge variant="secondary">You</Badge> : null}
+          </div>
+          {description ? (
+            <p className="max-w-prose text-sm text-muted-foreground">
+              {description}
+            </p>
+          ) : null}
         </div>
-        {description ? (
-          <p className="max-w-prose text-sm text-muted-foreground">
-            {description}
-          </p>
-        ) : null}
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="realm-panel relative aspect-square overflow-hidden">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-8">
+        {/* Artwork keeps its own proportions; a square holds the space until it loads. */}
+        <div className="realm-panel relative overflow-hidden">
           <TokenMedia
             sources={tokenMediaSources(token)}
             alt={name}
             priority
-            className="object-contain"
+            className="block h-auto max-h-[min(80vh,48rem)] [aspect-ratio:auto_1/1] object-contain"
+            fallbackClassName="aspect-square h-auto"
             fallbackLabel="Artwork unavailable"
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
@@ -290,132 +350,77 @@ export function TokenDetailView({
             lastSale={pickLastSale(activityItems)}
             listedCount={tokenListings.length}
           />
-          <Card className="gap-0 border-[color:var(--realm-border-etched)] py-0">
-            <CardContent className="p-5">
-              {listings.isError ? (
-                <p role="alert" className="flex flex-wrap items-center gap-3">
-                  <span>Listing prices are unavailable.</span>
-                  <Button
-                    variant="outline"
-                    className="min-h-11"
-                    onClick={() => void listings.refetch()}
-                  >
-                    Retry
-                  </Button>
-                </p>
-              ) : listings.isPending ? (
-                <ListSkeleton label="Loading price" count={1} />
-              ) : (
-                <ListingPurchase
-                  price={cheapest?.price}
-                  currency={cheapest?.currency}
-                  inCart={
-                    !!cheapest &&
-                    cartItems.some((item) => item.orderId === cheapest.orderId)
-                  }
-                  isOwner={isOwner}
-                  onViewCart={() => setCartOpen(true)}
-                  onAdd={() => {
-                    if (cheapest)
-                      addListingToCart(
-                        cartItemFromTokenListing(token, address, cheapest),
-                      );
-                  }}
-                />
-              )}
-            </CardContent>
-          </Card>
-          <div className="space-y-3">
-            {sharePrompt ? (
-              <ListingSharePrompt
-                target={shareTarget}
-                price={displayPrice(sharePrompt.price, sharePrompt.currency)}
-                onDismiss={() => {
-                  rememberSharePromptDismissed(sharePrompt.id);
-                  setDismissedShareFor(sharePrompt.id);
-                }}
-              />
-            ) : null}
-            <div className="flex flex-wrap gap-2">
-              {isOwner ? (
-                <>
-                  <Button
-                    className="min-h-11 flex-1 sm:flex-none"
-                    variant={composer === "listing" ? "outline" : "default"}
-                    aria-expanded={composer === "listing"}
-                    aria-controls={composerId}
-                    onClick={() => toggleComposer("listing")}
-                  >
-                    {composer === "listing" ? "Close" : "List for sale"}
-                  </Button>
-                  {myListing ? (
-                    <Button
-                      variant="destructive"
-                      className="min-h-11 flex-1 sm:flex-none"
-                      disabled={trade.busy}
-                      onClick={() =>
-                        void trade.execute(
-                          (marketplace) =>
-                            prepareCancellation(
-                              {
-                                marketplace,
-                                chain: trade.config!.chain,
-                                account: trade.address!,
-                              },
-                              [myListing.id],
-                            ),
-                          "cancel",
-                        )
-                      }
-                    >
-                      Cancel listing
-                    </Button>
-                  ) : null}
-                </>
-              ) : (
+          {sharePrompt ? (
+            <ListingSharePrompt
+              target={shareTarget}
+              price={displayPrice(sharePrompt.price, sharePrompt.currency)}
+              onDismiss={() => {
+                rememberSharePromptDismissed(sharePrompt.id);
+                setDismissedShareFor(sharePrompt.id);
+              }}
+            />
+          ) : null}
+          {listings.isError ? (
+            <div className="rounded-lg border border-destructive/30 p-3">
+              <p role="alert" className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                <span>Listing prices are unavailable.</span>
                 <Button
-                  className="min-h-11 flex-1 sm:flex-none"
-                  variant={composer === "token_offer" ? "outline" : "default"}
-                  aria-expanded={composer === "token_offer"}
-                  aria-controls={composerId}
-                  onClick={() => toggleComposer("token_offer")}
+                  variant="outline"
+                  className="min-h-11"
+                  onClick={() => void listings.refetch()}
                 >
-                  {composer === "token_offer" ? "Close" : "Make offer"}
+                  Retry
                 </Button>
-              )}
+              </p>
             </div>
-            {composer ? (
-              <div id={composerId} className="realm-panel p-4 sm:p-5">
-                <OrderComposer
-                  collection={address}
-                  tokenIds={[tokenId]}
-                  kind={composer}
-                />
-              </div>
-            ) : null}
-          </div>
+          ) : null}
+          {/* The price tile shows the listing; this row holds the actions. */}
+          <ListingPurchase
+            showPrice={false}
+            price={listings.isPending ? undefined : cheapest?.price}
+            currency={cheapest?.currency}
+            inCart={
+              !!cheapest &&
+              cartItems.some((item) => item.orderId === cheapest.orderId)
+            }
+            isOwner={isOwner}
+            onViewCart={() => setCartOpen(true)}
+            onAdd={() => {
+              if (cheapest)
+                addListingToCart(
+                  cartItemFromTokenListing(token, address, cheapest),
+                );
+            }}
+          >
+            {isOwner ? ownerActions : offerAction}
+          </ListingPurchase>
+          {composer ? (
+            <div id={composerId} className="realm-panel p-4 sm:p-5">
+              <OrderComposer
+                collection={address}
+                tokenIds={[tokenId]}
+                kind={composer}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
 
-      <Card className="gap-0 border-[color:var(--realm-border-etched)]">
-        <CardHeader className="border-b pb-4">
-          <div className="flex items-center gap-2">
-            <CardTitle>Traits</CardTitle>
-            {attributes.length > 0 ? (
-              <Badge variant="secondary" className="tabular-nums">
-                {attributes.length}
-              </Badge>
-            ) : null}
-          </div>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <TraitGrid
-            attributes={attributes}
-            rarity={rarity}
-            collectionAddress={address}
-          />
-        </CardContent>
-      </Card>
+      <section
+        aria-labelledby={`${sectionId}-traits`}
+        className="realm-panel space-y-4 p-4 sm:p-5"
+      >
+        <SectionHeader
+          id={`${sectionId}-traits`}
+          title="Traits"
+          count={attributes.length > 0 ? attributes.length : undefined}
+        />
+        <TraitGrid
+          attributes={attributes}
+          rarity={rarity}
+          collectionAddress={address}
+        />
+      </section>
 
       <OfferList
         orders={offerItems}
@@ -434,37 +439,36 @@ export function TokenDetailView({
         <BestBid collection={address} tokenId={tokenId} isOwner={isOwner} />
       </OfferList>
 
-      <Card className="gap-0 border-[color:var(--realm-border-etched)]">
-        <CardHeader className="border-b pb-4">
-          <CardTitle>Activity</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 pt-1">
-          {activityItems.length ? (
-            <TokenActivity
-              items={activityItems}
-              chain={getMarketplaceRuntimeConfig().chainLabel}
-            />
-          ) : activity.isPending ? (
-            <ListSkeleton label="Loading activity" compact />
-          ) : (
-            <p className="pt-3 text-sm text-muted-foreground">
-              {activity.isError
-                ? "Activity is unavailable. Try again shortly."
-                : "No indexed activity yet."}
-            </p>
-          )}
-          {activity.hasNextPage ? (
-            <Button
-              variant="outline"
-              className="min-h-11 w-full sm:w-auto"
-              disabled={activity.isFetchingNextPage}
-              onClick={() => void activity.fetchNextPage()}
-            >
-              More activity
-            </Button>
-          ) : null}
-        </CardContent>
-      </Card>
+      <section
+        aria-labelledby={`${sectionId}-activity`}
+        className="realm-panel space-y-4 p-4 sm:p-5"
+      >
+        <SectionHeader id={`${sectionId}-activity`} title="Activity" />
+        {activityItems.length ? (
+          <TokenActivity
+            items={activityItems}
+            chain={getMarketplaceRuntimeConfig().chainLabel}
+          />
+        ) : activity.isPending ? (
+          <ListSkeleton label="Loading activity" compact />
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            {activity.isError
+              ? "Activity is unavailable. Try again shortly."
+              : "No indexed activity yet."}
+          </p>
+        )}
+        {activity.hasNextPage ? (
+          <Button
+            variant="outline"
+            className="min-h-11 w-full sm:w-auto"
+            disabled={activity.isFetchingNextPage}
+            onClick={() => void activity.fetchNextPage()}
+          >
+            More activity
+          </Button>
+        ) : null}
+      </section>
 
       <ReportToken collection={address} tokenId={tokenId} />
     </div>

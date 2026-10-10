@@ -5,7 +5,6 @@ import { useDeferredValue, useMemo, useState } from "react";
 import { WalletIdentity } from "./wallet-identity";
 import { useAccount } from "@starknet-react/core";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useEntrance } from "@/lib/animation";
 import {
   Select,
@@ -41,6 +40,10 @@ type CollectionGroup = {
 };
 
 type GridDensityMode = "compact" | "standard";
+const DENSITY_OPTIONS: ReadonlyArray<readonly [GridDensityMode, string]> = [
+  ["standard", "Standard"],
+  ["compact", "Compact"],
+];
 const ALL_COLLECTIONS_VALUE = "__all_collections__";
 
 function asRecord(value: unknown) {
@@ -211,7 +214,7 @@ export function WalletProfileView({
     >
       {showHeader ? (
         <div className="space-y-1">
-          <h1 className="realm-title text-3xl">{title}</h1>
+          <h1 className="market-page-title">{title}</h1>
           <WalletIdentity address={address} label={addressLabel} connected={!!connectedAddress && connectedAddress.replace(/^0x0*/, "").toLowerCase()===address.replace(/^0x0*/, "").toLowerCase()} />
         </div>
       ) : null}
@@ -236,7 +239,7 @@ export function WalletProfileView({
             <div className="flex flex-wrap items-center gap-2">
               <Input
                 aria-label="Filter collection or token"
-                className="h-8 w-48 text-xs"
+                className="h-10 w-full text-sm sm:w-64"
                 onChange={(e) => setFilterInput(e.target.value)}
                 placeholder="Filter by collection or token ID…"
                 value={filterInput}
@@ -247,7 +250,7 @@ export function WalletProfileView({
               >
                 <SelectTrigger
                   aria-label="Filter by collection"
-                  className="h-8 min-w-44 text-xs"
+                  className="min-w-44 text-sm data-[size=sm]:h-10"
                   size="sm"
                 >
                   <SelectValue placeholder="All collections" />
@@ -263,27 +266,23 @@ export function WalletProfileView({
                   ))}
                 </SelectContent>
               </Select>
-              <div className="flex items-center gap-1">
-                <Button
-                  aria-pressed={density === "standard"}
-                  className="h-8 px-2 text-xs"
-                  onClick={() => setDensity("standard")}
-                  size="sm"
-                  type="button"
-                  variant={density === "standard" ? "default" : "outline"}
-                >
-                  Standard
-                </Button>
-                <Button
-                  aria-pressed={density === "compact"}
-                  className="h-8 px-2 text-xs"
-                  onClick={() => setDensity("compact")}
-                  size="sm"
-                  type="button"
-                  variant={density === "compact" ? "default" : "outline"}
-                >
-                  Compact
-                </Button>
+              {/* Shared segmented look (`.market-segmented`); buttons keep aria-pressed. */}
+              <div
+                role="group"
+                aria-label="Grid density"
+                className="market-segmented"
+              >
+                {DENSITY_OPTIONS.map(([value, label]) => (
+                  <button
+                    key={value}
+                    aria-pressed={density === value}
+                    className="market-segment h-9 min-w-11 px-3"
+                    onClick={() => setDensity(value)}
+                    type="button"
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

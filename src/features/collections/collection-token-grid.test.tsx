@@ -444,7 +444,10 @@ describe("collection token grid", () => {
 
     render(<CollectionTokenGrid address="0xabc" projectId="project-a" />);
 
-    expect(await screen.findByText("#1120")).toBeVisible();
+    // The name already ends with the decimal id, so the card omits a repeated "#1120" line;
+    // the hex id is still formatted for the card body label below.
+    expect(await screen.findByText("Golden Token #1120")).toBeVisible();
+    expect(screen.queryByText("#1120")).toBeNull();
     expect(screen.getByText("77")).toBeVisible();
 
     const tokenCardBody = screen.getByRole("article", { name: "token-1120" });

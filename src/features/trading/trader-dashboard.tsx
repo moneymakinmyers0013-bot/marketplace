@@ -161,10 +161,10 @@ export function TraderDashboard() {
     setSelected([]);
   }
   return (
-    <main className="market-page mx-auto max-w-7xl space-y-4">
-      <div>
-        <h1 className="realm-title text-3xl">Trading dashboard</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+    <main className="market-page mx-auto max-w-7xl space-y-6">
+      <div className="space-y-2">
+        <h1 className="market-page-title">Trading dashboard</h1>
+        <p className="text-sm text-muted-foreground">
           Manage your inventory, listings and offers.
         </p>
       </div>

@@ -287,23 +287,31 @@ export function CollectionRouteView({
       ? `Showing ${visibleTokens.length} item${visibleTokens.length === 1 ? "" : "s"}${canLoadMore ? ", more available" : ""}`
       : undefined;
 
+  // Chips summarise the filters in effect, so they sit directly under the controls they refine.
   const toolbar = (
-    <CollectionToolbar
-      query={query}
-      onQueryChange={(next) => onQueryChange?.(next)}
-      listedOnly={listedOnly}
-      onListedOnlyChange={(next) => onListedOnlyChange?.(next)}
-      sortMode={sortMode}
-      sortOptions={sortOptions}
-      onSortModeChange={(next) => onSortModeChange?.(next)}
-      layout={layout}
-      onLayoutChange={setLayout}
-      resultSummary={resultSummary}
-    />
+    <div className="space-y-3">
+      <CollectionToolbar
+        query={query}
+        onQueryChange={(next) => onQueryChange?.(next)}
+        listedOnly={listedOnly}
+        onListedOnlyChange={(next) => onListedOnlyChange?.(next)}
+        sortMode={sortMode}
+        sortOptions={sortOptions}
+        onSortModeChange={(next) => onSortModeChange?.(next)}
+        layout={layout}
+        onLayoutChange={setLayout}
+        resultSummary={resultSummary}
+      />
+      <ActiveFilterChips
+        activeFilters={resolvedActiveFilters}
+        onRemove={removeFilter}
+        onClear={() => onActiveFiltersChange?.({})}
+      />
+    </div>
   );
 
   return (
-    <section className="w-full space-y-4 pb-20">
+    <section className="w-full space-y-8 pb-20">
       <CollectionBanner ref={heroRef} image={headerImage} name={displayName ?? selectedCollection?.name ?? address}>
         <div className="flex w-full flex-col gap-3 lg:w-auto lg:items-end">
           <CurrencySwitcher label="Browse in" showBalance />
@@ -341,11 +349,6 @@ export function CollectionRouteView({
                 onOpenTraitNameChange={setOpenTraitName}
               />
           }>
-            <ActiveFilterChips
-              activeFilters={resolvedActiveFilters}
-              onRemove={removeFilter}
-              onClear={() => onActiveFiltersChange?.({})}
-            />
             <CollectionTokenGrid
               key={sweepScopeKey}
               activeFilters={resolvedActiveFilters}

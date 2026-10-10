@@ -2,8 +2,12 @@
 
 import { MarketplaceTokenCard } from "@/components/marketplace/token-card";
 import { AssetCardSkeleton } from "@/components/marketplace/loading-state";
+import { SectionHeader } from "@/components/marketplace/section-header";
 import type { TrendingToken } from "@/features/home/types";
 import { useEntrance } from "@/lib/animation";
+
+/** Every card in the rail shares one width so names, prices and notes line up. */
+const CARD_WIDTH = "w-44 shrink-0 sm:w-48";
 
 type TrendingTokensSectionProps = {
   tokens: TrendingToken[];
@@ -27,13 +31,13 @@ export function TrendingTokensSection({
 
   return (
     <section data-testid="trending-tokens" className="space-y-3">
-      <h2 className="realm-kicker text-lg">{title}</h2>
+      <SectionHeader title={title} />
 
       {isLoading ? (
         <div role="status" aria-label="Loading recent sales" data-testid="trending-tokens-scroll" className="overflow-x-auto">
           <div className="flex gap-3 pb-2">
             {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className={index === 0 ? "w-60 shrink-0" : "w-48 shrink-0"}>
+              <div key={index} className={CARD_WIDTH}>
                 <AssetCardSkeleton mediaTestId="trending-token-skeleton" />
               </div>
             ))}
@@ -48,16 +52,15 @@ export function TrendingTokensSection({
           <div data-testid="trending-tokens-scroll" className="overflow-x-auto">
             <div ref={scrollRef} className="flex gap-3 pb-2">
               {tokens.map((entry, index) => (
-                <div key={`${entry.href}-${index}`} className={index === 0 ? "w-60 shrink-0" : "w-48 shrink-0"} data-trending-item>
+                <div key={`${entry.href}-${index}`} className={CARD_WIDTH} data-trending-item>
                   <MarketplaceTokenCard
                     token={entry.token}
                     href={entry.href}
                     price={entry.price}
                     currency={entry.currency}
+                    note={entry.note}
+                    cardClassName="h-full"
                   />
-                  {entry.note ? (
-                    <p className="mt-1.5 px-1 text-xs text-muted-foreground">{entry.note}</p>
-                  ) : null}
                 </div>
               ))}
             </div>

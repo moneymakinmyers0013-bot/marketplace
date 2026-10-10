@@ -70,7 +70,7 @@ export function ListingSharePrompt({
         <X aria-hidden />
       </Button>
       <div className="space-y-1">
-        <h2 id={titleId} className="text-base leading-tight">
+        <h2 id={titleId} className="market-group-title">
           Your listing is live
         </h2>
         <p className="text-sm text-muted-foreground">

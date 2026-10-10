@@ -3,8 +3,9 @@ import { WalletConnectButton } from "@/components/layout/wallet-connect-button";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 import { useId, useState } from "react";
 import { Clock3 } from "lucide-react";
-import { OrderAmountInput } from "./order-amount-input";
+import { ORDER_FIELD_BOX, ORDER_FIELD_CONTROL, OrderAmountInput } from "./order-amount-input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -122,7 +123,8 @@ export function OrderComposer({
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <h3 className="font-medium">{title}</h3>
+        {/* The composer always sits inside a section or panel, so its title is a group title. */}
+        <h3 className="market-group-title">{title}</h3>
         {kind === "collection_offer" && (
           <p className="text-xs text-muted-foreground">
             An offer for one NFT from this collection.
@@ -147,8 +149,8 @@ export function OrderComposer({
         disabled={trade.busy}
         error={priceTouched ? priceError : undefined}
       />
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/70 px-4 py-3">
-        <label htmlFor={durationId} className="flex items-center gap-2 text-sm">
+      <div className={cn(ORDER_FIELD_BOX, "flex-wrap justify-between")}>
+        <label htmlFor={durationId} className="flex items-center gap-2 text-sm font-medium">
           <Clock3 aria-hidden className="size-4 text-muted-foreground" />
           Duration
         </label>
@@ -160,7 +162,7 @@ export function OrderComposer({
           <SelectTrigger
             id={durationId}
             aria-label="Duration"
-            className="h-11 min-h-11 w-36 border-0 bg-muted/30 shadow-none"
+            className={ORDER_FIELD_CONTROL}
           >
             <SelectValue />
           </SelectTrigger>
@@ -183,14 +185,15 @@ export function OrderComposer({
           {royaltyError}
         </p>
       )}
-      <dl className="space-y-3 rounded-xl bg-muted/20 p-4 text-sm">
-        <div className="flex justify-between gap-3">
+      {/* Breakdown rows share one baseline: muted terms left, tabular values right. */}
+      <dl className="space-y-2 rounded-xl bg-muted/20 px-4 py-3 text-sm">
+        <div className="flex items-baseline justify-between gap-3">
           <dt className="text-muted-foreground">Marketplace fee</dt>
-          <dd>{trade.config ? `${trade.config.feeBps / 100}%` : "—"}</dd>
+          <dd className="text-right tabular-nums">{trade.config ? `${trade.config.feeBps / 100}%` : "—"}</dd>
         </div>
-        <div className="flex justify-between gap-3">
+        <div className="flex items-baseline justify-between gap-3">
           <dt className="text-muted-foreground">Creator royalty</dt>
-          <dd>
+          <dd className="text-right tabular-nums">
             {royaltyError
               ? "Unavailable"
               : royaltyPercent === "0"
@@ -198,8 +201,8 @@ export function OrderComposer({
                 : `Up to ${royaltyPercent}%`}
           </dd>
         </div>
-        <div className="flex flex-wrap justify-between gap-2 border-t border-border/70 pt-3">
-          <dt className="text-muted-foreground">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-t border-border/70 pt-2">
+          <dt className="font-medium">
             {royaltyPercent !== "0"
               ? "Seller receives at least"
               : count > 1
@@ -208,7 +211,7 @@ export function OrderComposer({
           </dt>
           <dd
             data-testid="seller-proceeds"
-            className="min-w-0 break-all font-semibold tabular-nums text-primary"
+            className="ml-auto min-w-0 break-all text-right font-semibold tabular-nums text-primary"
           >
             {preview && BigInt(preview) > 0n
               ? `${formatCurrencyAmount(preview, selected?.address, selected?.decimals)} ${selected?.symbol ?? ""}`

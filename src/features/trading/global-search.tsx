@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { marketplaceRequest, tokenFromApi } from "@/lib/marketplace/api-client";
 import type { ApiCollection, ApiToken } from "@/lib/marketplace/types";
 import { MarketplaceTokenCard } from "@/components/marketplace/token-card";
+import { SectionHeader } from "@/components/marketplace/section-header";
 export function GlobalSearch({ query }: { query: string }) {
   const result = useQuery({
     queryKey: ["owned", "search", query],
@@ -15,8 +16,8 @@ export function GlobalSearch({ query }: { query: string }) {
       ),
   });
   return (
-    <main className="market-page space-y-6">
-      <h1 className="text-2xl">Search: {query}</h1>
+    <main className="market-page space-y-8">
+      <h1 className="market-page-title break-words">Search: {query}</h1>
       {result.isPending ? (
         <AssetGridSkeleton label="Searching marketplace" gridClassName="grid-cols-2 md:grid-cols-4" />
       ) : result.isError ? (
@@ -24,7 +25,7 @@ export function GlobalSearch({ query }: { query: string }) {
       ) : (
         <>
           <section className="space-y-3">
-            <h2 className="realm-kicker">Collections</h2>
+            <SectionHeader title="Collections" count={result.data.collections.length} />
             <div className="flex flex-wrap gap-3">
               {result.data.collections.map((c) => (
                 <Link
@@ -38,7 +39,7 @@ export function GlobalSearch({ query }: { query: string }) {
             </div>
           </section>
           <section className="space-y-3">
-            <h2 className="realm-kicker">NFTs</h2>
+            <SectionHeader title="NFTs" count={result.data.tokens.length} />
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
               {result.data.tokens.map((t) => (
                 <MarketplaceTokenCard

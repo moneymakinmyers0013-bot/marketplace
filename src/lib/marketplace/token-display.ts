@@ -150,6 +150,19 @@ export function displayTokenId(token: NormalizedToken) {
   return formatNumberish(token.token_id) ?? "unknown";
 }
 
+/**
+ * The "#id" caption shown under a token name, or null when the name already
+ * ends with that id ("Realm #0", "Beasts 42") and the caption would repeat it.
+ */
+export function tokenIdCaption(name: string, id: string): string | null {
+  const trimmed = name.trim();
+  if (trimmed.endsWith(id)) {
+    const before = trimmed.charAt(trimmed.length - id.length - 1);
+    if (!/[0-9a-z]/i.test(before)) return null;
+  }
+  return `#${id}`;
+}
+
 export function tokenName(token: NormalizedToken) {
   const name = normalizeMetadata(token)?.name;
   const source = chestSource(token);

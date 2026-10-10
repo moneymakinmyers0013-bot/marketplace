@@ -254,7 +254,8 @@ describe("collection row", () => {
       expect.arrayContaining(["2357", "0x935"]),
     );
     expect(screen.getByAltText("Loot Chest #2357")).toBeVisible();
-    expect(screen.getByText("#2357")).toBeVisible();
+    // The name already ends with the id, so the card shows no separate "#2357" line.
+    expect(screen.getByText("Loot Chest #2357")).toBeVisible();
     expect(screen.queryByText("No Image")).toBeNull();
   });
 
@@ -373,7 +374,8 @@ describe("collection row", () => {
       successResult([
         token("0x460", {
           image: "https://cdn.example/1120.png",
-          metadata: { name: "Golden Token #1120" },
+          // A name without the id, so the card renders its formatted "#id" line.
+          metadata: { name: "Golden Token" },
         }),
       ]),
     );

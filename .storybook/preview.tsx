@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Preview } from "@storybook/nextjs-vite";
 import { useEffect, useState, type PropsWithChildren } from "react";
-import { exo2, geistMono, fontClassName, fontVariables } from "../src/lib/fonts";
+import { exo2, monaspaceXenon, fontClassName, fontVariables } from "../src/lib/fonts";
 import "../src/app/globals.css";
 import { storybookTheme } from "./theme";
 import { resetScenario } from "./scenario";
@@ -27,7 +27,8 @@ function Theme({ children, theme }: { theme: string } & PropsWithChildren) {
           families and files through quoted, public asset URLs instead. */}
       <style>{`
         @font-face { font-family: ${JSON.stringify(exo2.style.fontFamily.split(",")[0].replaceAll('"', '').replaceAll("'", ''))}; src: url("/brand/fonts/exo-2-variable.ttf") format("truetype"); font-weight: 400 700; font-display: swap; }
-        @font-face { font-family: ${JSON.stringify(geistMono.style.fontFamily.split(",")[0].replaceAll('"', '').replaceAll("'", ''))}; src: url("/brand/fonts/geist-mono-variable.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+        @font-face { font-family: ${JSON.stringify(monaspaceXenon.style.fontFamily.split(",")[0].replaceAll('"', '').replaceAll("'", ''))}; src: url("/brand/fonts/monaspace-xenon-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+        @font-face { font-family: ${JSON.stringify(monaspaceXenon.style.fontFamily.split(",")[0].replaceAll('"', '').replaceAll("'", ''))}; src: url("/brand/fonts/monaspace-xenon-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
       `}</style>
       <div
         style={fontVariables}

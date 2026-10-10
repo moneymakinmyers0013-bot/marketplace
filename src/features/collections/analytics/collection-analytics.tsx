@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui";
-import { InfoTip } from "@/components/marketplace/info-tip";
+import { StatTile } from "@/components/marketplace/stat-tile";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 import { getTokenSymbol } from "@/lib/marketplace/token-display";
 import { sameCurrency } from "@/lib/marketplace/currency-store";
@@ -34,42 +34,19 @@ type CollectionAnalyticsProps = {
   currency: string;
 };
 
-function StatTile({
-  label,
-  value,
-  hint,
-  help,
-  delta,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-  help?: string;
-  delta?: number | null;
-}) {
-  const direction = delta === null || delta === undefined ? null : delta > 0 ? "up" : delta < 0 ? "down" : "flat";
+/** Floor change over the period: green up, red down, muted when flat. */
+function FloorDelta({ delta }: { delta: number }) {
+  const direction = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
   return (
-    <div className="realm-stat-pill flex min-w-0 flex-col gap-0.5 px-3 py-2">
-      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-        {label}
-        {help ? <InfoTip label={`About ${label.toLowerCase()}`} text={help} /> : null}
-      </span>
-      <span className="market-stat-value truncate text-lg font-semibold">{value}</span>
-      {direction ? (
-        <span
-          className={cn(
-            "text-[11px]",
-            direction === "up" && "text-emerald-400",
-            direction === "down" && "text-red-400",
-            direction === "flat" && "text-muted-foreground",
-          )}
-        >
-          {direction === "up" ? "▲" : direction === "down" ? "▼" : "•"} {Math.abs(delta ?? 0).toFixed(1)}% in period
-        </span>
-      ) : hint ? (
-        <span className="text-[11px] text-muted-foreground">{hint}</span>
-      ) : null}
-    </div>
+    <span
+      className={cn(
+        direction === "up" && "text-emerald-400",
+        direction === "down" && "text-red-400",
+        direction === "flat" && "text-muted-foreground",
+      )}
+    >
+      {direction === "up" ? "▲" : direction === "down" ? "▼" : "•"} {Math.abs(delta).toFixed(1)}% in period
+    </span>
   );
 }
 
@@ -142,7 +119,7 @@ export function CollectionAnalytics({ address, currency }: CollectionAnalyticsPr
     <div className="space-y-4" data-testid="collection-analytics">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground" id="analytics-period-label">
+          <span className="market-label" id="analytics-period-label">
             Period
           </span>
           <ToggleGroupPrimitive.Root
@@ -152,14 +129,14 @@ export function CollectionAnalytics({ address, currency }: CollectionAnalyticsPr
             onValueChange={(value) => {
               if (value) setDays(Number(value) as StatsPeriod);
             }}
-            className="inline-flex rounded-[8px] border border-[color:var(--realm-border-etched)] bg-[color:var(--realm-surface-iron)]/80 p-0.5"
+            className="market-segmented"
           >
             {STATS_PERIODS.map((period) => (
               <ToggleGroupPrimitive.Item
                 key={period}
                 value={String(period)}
                 aria-label={`Last ${period} day${period === 1 ? "" : "s"}`}
-                className="h-9 min-w-11 rounded-[6px] px-2 text-xs font-semibold text-muted-foreground transition-colors data-[state=on]:bg-primary data-[state=on]:text-primary-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="market-segment h-9 min-w-11 px-2"
               >
                 {PERIOD_LABELS[period]}
               </ToggleGroupPrimitive.Item>
@@ -180,37 +157,32 @@ export function CollectionAnalytics({ address, currency }: CollectionAnalyticsPr
         </p>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4" data-testid="analytics-stat-tiles">
+      <dl className="grid grid-cols-2 gap-2 md:grid-cols-4" data-testid="analytics-stat-tiles">
         <StatTile
           label="Volume"
-          value={stats.isPending ? "…" : volumeText}
-          hint={`${PERIOD_LABELS[days]} gross, fees included`}
+          note={`${PERIOD_LABELS[days]} gross, fees included`}
           help="Everything buyers paid in this period, including marketplace fees and royalties."
-        />
-        <StatTile
-          label="Sales"
-          value={stats.isPending ? "…" : String(salesCount)}
-          hint={`${PERIOD_LABELS[days]} fills`}
-        />
-        <StatTile
-          label="Average price"
-          value={stats.isPending ? "…" : average === null ? "—" : `${formatCompact(average)} ${symbol}`}
-          hint="Volume divided by sales"
-        />
+        >
+          {stats.isPending ? "…" : volumeText}
+        </StatTile>
+        <StatTile label="Sales" note={`${PERIOD_LABELS[days]} fills`}>
+          {stats.isPending ? "…" : String(salesCount)}
+        </StatTile>
+        <StatTile label="Average price" note="Volume divided by sales">
+          {stats.isPending ? "…" : average === null ? "—" : `${formatCompact(average)} ${symbol}`}
+        </StatTile>
         <StatTile
           label="Floor"
-          value={
-            stats.isPending
-              ? "…"
-              : currentFloor
-                ? `${formatCurrencyAmount(currentFloor, currency)} ${symbol}`
-                : "No listings"
-          }
-          delta={floorDelta}
-          hint="Cheapest live listing"
+          note={floorDelta === null ? "Cheapest live listing" : <FloorDelta delta={floorDelta} />}
           help="The cheapest listing from a seller who still owns the item. The change compares the first and last floor recorded in the period."
-        />
-      </div>
+        >
+          {stats.isPending
+            ? "…"
+            : currentFloor
+              ? `${formatCurrencyAmount(currentFloor, currency)} ${symbol}`
+              : "No listings"}
+        </StatTile>
+      </dl>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <FloorHistoryChart

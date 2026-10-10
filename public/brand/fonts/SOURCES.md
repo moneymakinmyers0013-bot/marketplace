@@ -1,12 +1,16 @@
 # UI fonts
 
-Unmodified variable font files downloaded from the Google Fonts repository on
-8 October 2026. Bundled locally so Next.js builds do not depend on Google's font
-service or its generated font URLs. The application's existing families and CSS
-variables are retained.
+Unmodified font files, bundled locally so Next.js builds do not depend on a
+font service or its generated font URLs.
 
-- Exo 2: https://github.com/google/fonts/tree/main/ofl/exo2 — `exo-2-OFL.txt`
-- Geist Mono: https://github.com/google/fonts/tree/main/ofl/geistmono — `geist-mono-OFL.txt`
+- Exo 2 (variable), from the Google Fonts repository on 8 October 2026:
+  https://github.com/google/fonts/tree/main/ofl/exo2 — `exo-2-OFL.txt`
+- Monaspace Xenon Regular and SemiBold, from the official Monaspace v1.400
+  static web font release (`monaspace-webfont-static-v1.400.zip`) on
+  10 October 2026: https://github.com/githubnext/monaspace/releases/tag/v1.400 —
+  `monaspace-OFL.txt`. Files are renamed only; their contents are unchanged.
+  "Monaspace" is a Reserved Font Name, so subset or otherwise modified copies
+  must not keep that name.
 
 Both fonts are distributed under the SIL Open Font License 1.1. Keep the respective
 license files with the fonts when redistributing them.
@@ -14,7 +18,8 @@ license files with the fonts when redistributing them.
 SHA-256 checksums:
 
 - `exo-2-variable.ttf`: `205a448676a2586f9c57c25f3d5c58ca8db7e6cf5edf7506783a010c6fe2bfb5`
-- `geist-mono-variable.ttf`: `d00e590b8eb3a59acc329b2d044fd143ae935090b7da33199ebee27cc7de8196`
+- `monaspace-xenon-400.woff2` (`MonaspaceXenon-Regular.woff2`): `eb34d971e2bf956230ba2e5bd621af7310d4c739057ae7df7b8a38ca95b03cf6`
+- `monaspace-xenon-600.woff2` (`MonaspaceXenon-SemiBold.woff2`): `7772439b105e2eb3d6104f33757fbddd3e4db334f9ff61ffdbf654c0babc3c7c`
 
 ## Static share-card instances
 

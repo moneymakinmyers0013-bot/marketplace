@@ -39,27 +39,15 @@ export function PortfolioView({ initialAddress = "" }: PortfolioViewProps) {
 
   return (
     <main
-      className="market-page mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col gap-4"
+      className="market-page mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col gap-6"
       data-testid="portfolio-view"
     >
-      <h1 className="realm-title text-3xl">Portfolio</h1>
+      <h1 className="market-page-title">Portfolio</h1>
 
-      {!activeAddress && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-4 rounded-[8px] border border-[color:var(--realm-border-etched)] bg-muted/70 p-4">
-            <Wallet className="h-6 w-6 text-muted-foreground" />
-          </div>
-          <p className="realm-title mb-1 text-xl">Explore any wallet</p>
-          <p className="text-xs text-muted-foreground mb-4">Enter a wallet address to view NFT holdings</p>
-        </div>
-      )}
-
+      {/* Lookup first, then whatever it loads: the empty prompt or the holdings. */}
       <form className="flex flex-col gap-2 sm:flex-row sm:items-end" onSubmit={handleSubmit}>
-        <div className="w-full">
-          <label
-            className="realm-kicker mb-1 block text-sm"
-            htmlFor="portfolio-address-input"
-          >
+        <div className="w-full space-y-1.5">
+          <label className="market-label block" htmlFor="portfolio-address-input">
             Wallet address
           </label>
           <Input
@@ -69,10 +57,10 @@ export function PortfolioView({ initialAddress = "" }: PortfolioViewProps) {
             onChange={(event) => setAddressInput(event.target.value)}
             placeholder="0x..."
             value={addressInput}
-            className="border-[color:var(--realm-border-etched)] bg-[color:var(--realm-surface-iron)]/80 text-foreground placeholder:text-muted-foreground/70"
+            className="h-10 border-[color:var(--realm-border-etched)] bg-[color:var(--realm-surface-iron)]/80 text-foreground placeholder:text-muted-foreground/70"
           />
         </div>
-        <Button className="sm:w-auto" type="submit" disabled={!hydrated}>
+        <Button className="h-10 sm:w-auto" type="submit" disabled={!hydrated}>
           Load holdings
         </Button>
       </form>
@@ -80,6 +68,16 @@ export function PortfolioView({ initialAddress = "" }: PortfolioViewProps) {
       {errorMessage ? (
         <p className="text-sm text-destructive">{errorMessage}</p>
       ) : null}
+
+      {!activeAddress && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="mb-4 rounded-[8px] border border-[color:var(--realm-border-etched)] bg-muted/70 p-4">
+            <Wallet className="h-6 w-6 text-muted-foreground" />
+          </div>
+          <p className="market-group-title mb-1">Explore any wallet</p>
+          <p className="text-xs text-muted-foreground">Enter a wallet address to view NFT holdings</p>
+        </div>
+      )}
 
       {activeAddress ? (
         <WalletProfileView

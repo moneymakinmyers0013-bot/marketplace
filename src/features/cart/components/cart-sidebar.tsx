@@ -72,10 +72,11 @@ export function CartSidebar() {
       </Button>
       <Sheet open={isOpen} onOpenChange={setOpen}>
         <SheetContent className="w-full sm:max-w-md">
-          <SheetHeader>
+          {/* pr-12 keeps the title row and description clear of the sheet's close button. */}
+          <SheetHeader className="gap-1 pr-12">
             <div className="flex items-center gap-2">
-              <SheetTitle>Cart</SheetTitle>
-              <span className="rounded-[6px] border border-[color:var(--realm-border-etched)] px-1.5 py-0.5 text-xs text-muted-foreground">
+              <SheetTitle className="market-section-title">Cart</SheetTitle>
+              <span className="market-chip inline-flex h-5 items-center rounded-sm border px-1.5 text-muted-foreground">
                 {items.length} of {CART_MAX_ITEMS}
               </span>
             </div>
@@ -83,7 +84,7 @@ export function CartSidebar() {
               One currency per checkout, up to {CART_MAX_ITEMS} items. Everything settles in a single transaction.
             </SheetDescription>
           </SheetHeader>
-          <div className="flex-1 space-y-2 overflow-y-auto px-4">
+          <div className="flex-1 overflow-y-auto px-4">
             {items.length === 0 ? (
               <div className="flex flex-col items-center gap-2 py-10 text-center">
                 <ShoppingCart aria-hidden className="size-6 text-muted-foreground" />
@@ -93,11 +94,9 @@ export function CartSidebar() {
                 </p>
               </div>
             ) : (
-              items.map((item) => (
-                <div
-                  key={item.orderId}
-                  className="rounded-lg border border-[color:var(--realm-border-etched)] bg-[color:var(--realm-surface-iron)]/60 p-2.5"
-                >
+              <ul className="divide-y divide-[color:var(--realm-border-etched)] border-y border-[color:var(--realm-border-etched)]">
+              {items.map((item) => (
+                <li key={item.orderId} className="py-3">
                   <div className="flex items-center gap-3">
                     <span className="size-12 shrink-0 overflow-hidden rounded-md border border-[color:var(--realm-border-etched)] bg-muted">
                       <TokenMedia
@@ -110,11 +109,11 @@ export function CartSidebar() {
                       <Link
                         href={`/collections/${item.collection}/${item.tokenId}`}
                         onClick={() => setOpen(false)}
-                        className="block truncate font-medium hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="block truncate text-sm font-medium leading-5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {item.tokenName ?? `Token #${item.tokenId}`}
                       </Link>
-                      <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <p className="mt-0.5 flex items-center gap-1 text-sm tabular-nums text-muted-foreground">
                         {formatCurrencyAmount(item.price, item.currency)}{" "}
                         <TokenSymbol address={item.currency} />
                       </p>
@@ -122,7 +121,7 @@ export function CartSidebar() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="size-11"
+                      className="size-11 shrink-0"
                       aria-label={`Remove ${item.tokenName ?? item.tokenId}`}
                       disabled={trade.busy}
                       onClick={() => removeItem(item.orderId)}
@@ -131,23 +130,24 @@ export function CartSidebar() {
                     </Button>
                   </div>
                   {inlineErrors[item.orderId] && (
-                    <p role="alert" className="mt-2 text-xs text-destructive">
+                    <p role="alert" className="mt-2 pl-15 text-xs text-destructive">
                       {inlineErrors[item.orderId]}
                     </p>
                   )}
-                </div>
-              ))
+                </li>
+              ))}
+              </ul>
             )}
             {lastActionError && (
-              <p role="alert" className="text-destructive">
+              <p role="alert" className="mt-3 text-sm text-destructive">
                 {lastActionError}
               </p>
             )}
           </div>
           <div className="space-y-3 border-t border-[color:var(--realm-border-etched)] p-4">
-            <div className="flex items-baseline justify-between">
-              <span className="text-sm text-muted-foreground">Total payment</span>
-              <span className="flex items-center gap-1.5 text-lg font-semibold">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-sm font-medium">Total payment</span>
+              <span className="flex items-center gap-1.5 text-xl font-semibold tabular-nums text-primary">
                 {formatCurrencyAmount(total, currency) ?? "0"}{" "}
                 {currency ? <TokenSymbol address={currency} className="text-sm text-muted-foreground" /> : ""}
               </span>

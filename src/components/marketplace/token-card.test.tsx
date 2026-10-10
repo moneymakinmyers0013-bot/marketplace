@@ -27,9 +27,38 @@ describe("MarketplaceTokenCard", () => {
 
     expect(screen.getByRole("link")).toHaveAttribute("href", "/collections/0xabc/7");
     expect(screen.getByText("Token #7")).toBeVisible();
-    expect(screen.getByText("#7")).toBeVisible();
+    // The name already carries the id, so no separate "#7" line repeats it.
+    expect(screen.queryByText("#7")).toBeNull();
     expect(screen.getByText("1")).toBeVisible();
     expect(screen.getByAltText("Token #7").parentElement).toHaveClass("aspect-[4/5]");
+  });
+
+  it("shows_the_id_line_when_the_name_does_not_carry_it", () => {
+    render(
+      <MarketplaceTokenCard
+        href="/collections/0xabc/21"
+        token={token("21", { name: "Ember Drake" })}
+      />,
+    );
+
+    expect(screen.getByText("Ember Drake")).toBeVisible();
+    expect(screen.getByText("#21")).toBeVisible();
+    expect(screen.getByText("Not listed")).toBeVisible();
+  });
+
+  it("renders_a_note_inside_the_card_body", () => {
+    render(
+      <MarketplaceTokenCard
+        href="/collections/0xabc/22"
+        cardContentRole="article"
+        cardContentAriaLabel="token-22"
+        note="Sold 3d ago"
+        token={token("22", { name: "Token #22" })}
+      />,
+    );
+
+    const body = screen.getByRole("article", { name: "token-22" });
+    expect(within(body).getByText("Sold 3d ago")).toBeVisible();
   });
 
   it("includes_hover_and_focus_attribute_table_overlay", () => {

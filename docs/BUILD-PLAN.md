@@ -406,6 +406,23 @@ results are recorded below; earlier counts and individual implementation reports
 are [historical evidence](history/IMPLEMENTATION-EVIDENCE-2026-10-07.md), not current
 release approval. Demo screenshots and local fixtures do not close launch gates.
 
+### UI hierarchy and surface polish — 10 October 2026
+
+Implemented locally: shared heading/stat/section hierarchy, Monaspace Xenon for
+machine data and chips, solid panel surfaces, quieter border hierarchy and
+floating-layer elevation. Artwork readability overlays remain. Surface changes
+also correct small error-text contrast and the light-review heading contrast.
+See [Storybook](STORYBOOK.md#borders-surfaces-and-elevation) for the component
+reference and review coverage. Local checks pass: 669 unit tests, 196 Storybook
+interaction/accessibility tests, typecheck and both production builds. Lint has
+one existing unused-variable warning in the Storybook trade mock. Checks used
+Node 22.23.1 locally; CI's required 22.23.3 remains a separate verification.
+Fixture home, collection and token layouts were reviewed at 390/768/1440px;
+wallet states remain story simulations. No deployment or real-wallet acceptance
+is claimed. Server-prefetch performance experiments remain investigation evidence
+under ignored `.context/perf/`; no performance prototype is integrated or launch
+latency target marked passed.
+
 ### Release preparation — 7 October 2026
 
 - Local settings remain on disk but `.env.local` is removed from source control;

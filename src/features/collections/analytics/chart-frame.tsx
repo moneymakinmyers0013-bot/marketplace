@@ -50,17 +50,14 @@ export function ChartFrame({
   return (
     <section
       aria-labelledby={titleId}
-      className={cn("realm-panel flex min-w-0 flex-col gap-3 p-4", className)}
+      className={cn("realm-panel flex min-w-0 flex-col gap-4 p-4 sm:p-5", className)}
       data-testid={`chart-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
     >
-      <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
-        <div className="min-w-0">
-          <h3 id={titleId} className="text-sm font-semibold normal-case tracking-normal text-foreground">
-            {title}
-          </h3>
-          {subtitle ? <p className="text-xs text-muted-foreground">{subtitle}</p> : null}
-        </div>
-        <div className="flex items-center gap-3">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1">
+        <h3 id={titleId} className="market-group-title min-w-0">
+          {title}
+        </h3>
+        <div className="flex items-center gap-3 justify-self-end">
           {summary ? <div className="text-right">{summary}</div> : null}
           <ToggleGroupPrimitive.Root
             type="single"
@@ -69,19 +66,20 @@ export function ChartFrame({
             onValueChange={(value) => {
               if (value === "chart" || value === "table") setView(value);
             }}
-            className="inline-flex rounded-[6px] border border-[color:var(--realm-border-etched)] p-0.5"
+            className="market-segmented h-8"
           >
             {(["chart", "table"] as const).map((option) => (
               <ToggleGroupPrimitive.Item
                 key={option}
                 value={option}
-                className="rounded-[4px] px-2 py-1 text-[11px] font-medium capitalize text-muted-foreground transition-colors data-[state=on]:bg-primary/15 data-[state=on]:text-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="market-segment px-2.5 capitalize"
               >
                 {option}
               </ToggleGroupPrimitive.Item>
             ))}
           </ToggleGroupPrimitive.Root>
         </div>
+        {subtitle ? <p className="col-span-2 text-xs text-muted-foreground">{subtitle}</p> : null}
       </header>
       <div ref={ref} className="min-w-0">
         {loading ? (

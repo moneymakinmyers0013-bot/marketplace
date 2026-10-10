@@ -5,13 +5,20 @@ export const exo2 = localFont({
   weight: "400 700",
   display: "swap",
 });
-export const geistMono = localFont({
-  src: "../../public/brand/fonts/geist-mono-variable.ttf",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+// Monaspace Xenon carries on-chain data and chips (see the type hierarchy in
+// docs/STORYBOOK.md). Official static cuts, unmodified; only the rendered weight
+// is downloaded, so it is not preloaded ahead of page content.
+export const monaspaceXenon = localFont({
+  src: [
+    { path: "../../public/brand/fonts/monaspace-xenon-400.woff2", weight: "400", style: "normal" },
+    { path: "../../public/brand/fonts/monaspace-xenon-600.woff2", weight: "600", style: "normal" },
+  ],
+  variable: "--font-monaspace-xenon",
   display: "swap",
+  preload: false,
+  fallback: ["ui-monospace", "monospace"],
 });
-export const fontClassName = `${exo2.variable} ${geistMono.variable}`;
+export const fontClassName = `${exo2.variable} ${monaspaceXenon.variable}`;
 
 // Bind semantic tokens where the font loader classes live, rather than resolving them
 // at :root before next/font's body-level variables exist.
@@ -22,5 +29,5 @@ const cssFamily = (family: string) =>
 export const fontVariables = {
   "--font-sans": cssFamily(exo2.style.fontFamily),
   "--font-ui": cssFamily(exo2.style.fontFamily),
-  "--font-mono": cssFamily(geistMono.style.fontFamily),
+  "--font-mono": cssFamily(monaspaceXenon.style.fontFamily),
 } as import("react").CSSProperties;
