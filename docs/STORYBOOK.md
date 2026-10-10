@@ -344,3 +344,13 @@ pending prices. Browser review includes 390, 768 and 1440px layouts; a delayed
 local fixture API verifies home → collection → token and portfolio loading to
 content transitions. Wallet-only data states use isolated stories/tests; no live
 wallet transaction is required for this presentation change.
+
+## Responsive local artwork
+
+`Marketplace/Artwork loading/ResponsiveArtwork`, `PriorityArtwork` and `Banners`
+exercise bundled WebP variants with the production image components. External
+URLs retain their existing fallback behavior. `pnpm images:build` regenerates
+reviewed derivatives from the original files using pinned development-only sharp.
+Thumbnail `sizes` are 40px, spotlight 320px, cards use viewport-based widths, and
+hero banners use 100vw with eager/high priority. Browsers may reuse a larger cached
+variant rather than download a smaller one.

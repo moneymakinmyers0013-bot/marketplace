@@ -423,6 +423,19 @@ is claimed. Server-prefetch performance experiments remain investigation evidenc
 under ignored `.context/perf/`; no performance prototype is integrated or launch
 latency target marked passed.
 
+### Page-delivery performance — 10 October 2026
+
+User authorized sequential local improvements with a commit after each priority.
+Priority 1 is implemented: reviewed WebP variants for seven bundled collection
+images, responsive selection for cards/thumbnails/banners, and eager high-priority
+hero loading. The originals total 21,586,372 bytes; the seven 256px variants total
+82,744 bytes. These are asset sizes, not a measured production load-time gain.
+`pnpm images:build` uses pinned development-only sharp 0.35.5; the backend media
+worker and external NFT URLs are unchanged. Image fallback/priority tests,
+relevant Storybook/a11y tests (38 combined tests), typecheck, lint and both builds
+pass. Artwork stories checked at 390/639/640/768/1440px; fixture home at
+390/768/1440px. Server prefetching, startup and navigation improvements are next.
+
 ### Release preparation — 7 October 2026
 
 - Local settings remain on disk but `.env.local` is removed from source control;

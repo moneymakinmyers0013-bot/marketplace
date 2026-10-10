@@ -80,6 +80,7 @@ export const MarketplaceTokenCard = React.memo(function MarketplaceTokenCard({
           alt={name}
           className={cn("h-full w-full object-cover", mediaImageClassName)}
           sources={mediaSources}
+          sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 20vw"
         />
       </div>
       <CardContent

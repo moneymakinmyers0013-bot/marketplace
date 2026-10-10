@@ -7,6 +7,7 @@ import Link from "next/link";
 import { animate, stagger } from "animejs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { localImageProps } from "@/lib/marketplace/local-image";
 
 /** Banner tiles match the collection banner's stats strip. */
 const STAT_CLASS = "hero-stat min-w-24 backdrop-blur-md sm:min-w-[7.5rem]";
@@ -66,7 +67,11 @@ export function HeroBanner({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             alt={`${name} banner`}
-            src={imageUrl}
+            {...localImageProps(imageUrl)}
+            sizes="100vw"
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
             className="h-full w-full object-cover"
           />
         ) : (

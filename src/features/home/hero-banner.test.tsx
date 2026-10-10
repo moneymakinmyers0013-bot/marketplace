@@ -3,6 +3,14 @@ import { describe, expect, it } from "vitest";
 import { HeroBanner } from "@/features/home/hero-banner";
 
 describe("HeroBanner", () => {
+  it("prioritizes a responsive local hero", () => {
+    render(<HeroBanner name="Realms" address="0xabc" imageUrl="/banners/realms.png" />);
+    const image = screen.getByAltText("Realms banner");
+    expect(image).toHaveAttribute("fetchpriority", "high");
+    expect(image).toHaveAttribute("sizes", "100vw");
+    expect(image.getAttribute("srcset")).toContain("/optimized/banners/realms-640.webp 640w");
+  });
+
   it("renders_collection_name_as_heading", () => {
     render(
       <HeroBanner

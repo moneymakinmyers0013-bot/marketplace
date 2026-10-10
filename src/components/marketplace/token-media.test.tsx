@@ -3,6 +3,17 @@ import { describe, expect, it } from "vitest";
 import { TokenMedia } from "./token-media";
 
 describe("TokenMedia", () => {
+  it("serves responsive bundled artwork without downloading the original", () => {
+    render(<TokenMedia alt="Realm" sources={["/banners/realms.png", "https://example.org/fallback.png"]} sizes="40px" />);
+    const image = screen.getByRole("img", { name: "Realm" });
+    expect(image.getAttribute("src")).toMatch(/\/optimized\/banners\/realms-\d+\.webp$/);
+    expect(image.getAttribute("srcset")).toContain("/optimized/banners/realms-64.webp 64w");
+    expect(image).toHaveAttribute("sizes", "40px");
+    fireEvent.error(image);
+    expect(image).toHaveAttribute("src", "https://example.org/fallback.png");
+    expect(image).not.toHaveAttribute("srcset");
+  });
+
   it("loads lazily from the first candidate", () => {
     render(<TokenMedia alt="Realm #1" sources={["/a.png", "/b.png"]} />);
     const image = screen.getByRole("img", { name: "Realm #1" });

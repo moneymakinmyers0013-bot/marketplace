@@ -215,7 +215,7 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
                           {index + 1}
                         </span>
                         <span className="size-9 shrink-0 overflow-hidden sm:size-11 rounded-md border border-[color:var(--realm-border-etched)] bg-muted">
-                          <TokenMedia alt="" sources={collection.imageUrl ? [collection.imageUrl] : []} fallbackLabel="" />
+                          <TokenMedia alt="" sources={collection.imageUrl ? [collection.imageUrl] : []} sizes="40px" fallbackLabel="" />
                         </span>
                         <Link
                           href={href}

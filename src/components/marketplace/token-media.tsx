@@ -3,6 +3,7 @@
 import { useState, type CSSProperties } from "react";
 import { ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { localImageProps } from "@/lib/marketplace/local-image";
 
 type TokenMediaProps = {
   /** Candidate URLs in preference order; the next one is tried when one fails. */
@@ -71,8 +72,8 @@ export function TokenMedia({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       onError={() => setAttempt({ key, index: index + 1 })}
-      sizes={sizes}
-      src={source}
+      sizes={sizes ?? "100vw"}
+      {...localImageProps(source)}
       style={style}
     />
   );

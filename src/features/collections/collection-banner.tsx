@@ -1,4 +1,5 @@
 import type { ReactNode, Ref } from "react";
+import { localImageProps } from "@/lib/marketplace/local-image";
 
 export function CollectionBanner({ name, image, children, ref }: {
   name: string;
@@ -17,7 +18,11 @@ export function CollectionBanner({ name, image, children, ref }: {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt={`${name} banner`}
-            src={image}
+            {...localImageProps(image)}
+            sizes="100vw"
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
             className="hero-image absolute inset-0 h-full w-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--realm-bg-void)] via-[color:var(--realm-bg-void)]/70 to-transparent" />

@@ -20,7 +20,7 @@ export function PromotedCollection({
   return (
     <div className="realm-panel sticky top-32 overflow-hidden" data-testid="promoted-collection">
       <div className="relative aspect-[4/3] w-full bg-muted">
-        <TokenMedia alt={`${name} artwork`} sources={imageUrl ? [imageUrl] : []} />
+        <TokenMedia alt={`${name} artwork`} sources={imageUrl ? [imageUrl] : []} sizes="320px" />
         <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--realm-bg-void)] via-[color:var(--realm-bg-void)]/45 to-transparent" />
       </div>
 
