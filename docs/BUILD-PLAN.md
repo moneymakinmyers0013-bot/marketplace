@@ -444,7 +444,15 @@ deployment/timeout checks and collection stories pass, as do typecheck, lint and
 both builds. Browser inspection of a filtered collection found only config and
 advisory sweep requests after hydration, with no repeated collection/token/stat
 reads. This is fixture integration evidence, not production latency validation.
-Home/token prefetching, startup and navigation improvements are next.
+Priority 3 is implemented: home catalog/recent-sales/statistics and token public
+reads share browser/server query definitions. Primary content is prefetched with
+the 1.5-second budget; secondary queries stream through dehydrated promises with
+the SDK's existing 15-second per-read timeout. Home search skips unrelated catalog
+prefetch. Hydration, streaming and relevant feature tests pass; Storybook, app
+build, types and lint pass. In the fixture browser, home requests only current
+configuration after hydration; token keeps current configuration, authentication
+and its independent holder check. No real wallet request was made. Startup and
+navigation improvements are next.
 
 ### Release preparation — 7 October 2026
 

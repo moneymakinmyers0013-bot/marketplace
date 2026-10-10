@@ -102,8 +102,8 @@ describe("useTraitRarity", () => {
       }),
     );
     expect(result.current("Order", "Fox")).toBeNull();
-    expect(request).toHaveBeenCalledWith("/collections/0xa/traits");
-    expect(request).toHaveBeenCalledWith("/collections/0xa");
+    expect(request).toHaveBeenCalledWith("/collections/0xa/traits", {}, undefined, expect.any(AbortSignal));
+    expect(request).toHaveBeenCalledWith("/collections/0xa", {}, undefined, expect.any(AbortSignal));
   });
 
   it("fetches facets and the collection once per collection", async () => {

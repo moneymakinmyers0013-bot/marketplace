@@ -10,8 +10,7 @@ import { TokenMedia } from "@/components/marketplace/token-media";
 import { TokenSymbol } from "@/components/ui/token-symbol";
 import { InfoTip } from "@/components/marketplace/info-tip";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
-import { marketplaceRequest } from "@/lib/marketplace/api-client";
-import type { CollectionStats } from "@/lib/marketplace/market-data";
+import { collectionStatsOptions } from "@/lib/marketplace/public-queries";
 import { sameCurrency } from "@/lib/marketplace/currency-store";
 import type { CollectionCardData } from "./types";
 import { cn } from "@/lib/utils";
@@ -77,15 +76,7 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
   const router = useRouter();
   const [sort, setSort] = useState<SortState>({ key: "rank", direction: "asc" });
   const statsQueries = useQueries({
-    queries: collections.map((collection) => ({
-      queryKey: ["owned", "stats", collection.address, 7, currency],
-      queryFn: () =>
-        marketplaceRequest<CollectionStats>(`/collections/${collection.address}/stats`, {
-          days: 7,
-          currency,
-        }),
-      staleTime: 30_000,
-    })),
+    queries: collections.map(collection => collectionStatsOptions(collection.address, 7, currency)),
   });
   const statsByAddress = useMemo(() => {
     const map = new Map<string, { volume: bigint | null; sales: number; pending: boolean }>();

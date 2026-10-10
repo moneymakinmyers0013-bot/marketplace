@@ -1,7 +1,7 @@
 import { TokenDetailSkeleton } from "@/components/marketplace/loading-state";
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { TokenDetailView } from "@/features/token/token-detail-view";
+import { TokenPageData } from "@/features/token/token-page-data";
 import { buildMarketplacePageMetadata, shareCardImage } from "@/lib/seo/metadata";
 import { tokenShareCopy } from "@/lib/seo/share-copy";
 
@@ -15,7 +15,7 @@ export default async function TokenPage({ params }: TokenPageProps) {
   return (
     <main className="market-page w-full">
       <Suspense fallback={<TokenDetailSkeleton />}>
-        <TokenDetailView address={address} tokenId={tokenId} />
+        <TokenPageData address={address} tokenId={tokenId} />
       </Suspense>
     </main>
   );

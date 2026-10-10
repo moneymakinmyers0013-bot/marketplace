@@ -9,8 +9,8 @@ import {
   fetchCollectionTokens,
   fetchTokenBalances,
   ownedClient,
-  marketplaceRequest,
 } from "./api-client";
+import { marketplaceRequest } from "@/lib/marketplace/api-client";
 import type {
   CollectionOrdersOptions,
   CollectionSummaryOptions,

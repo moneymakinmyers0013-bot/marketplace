@@ -3,6 +3,8 @@ import { DEFAULT_CURRENCY, marketplaceRequest, ownedClient } from "@/lib/marketp
 import type { ApiCollection, ApiOrder, ApiPage, CollectionOrdersOptions, FetchCollectionTokensOptions, TokenDetailsOptions } from "./types";
 import type { ActivityEvent, ActivityFilter, CollectionStats } from "./market-data";
 import { publicQueryKey } from "./public-query-key";
+import type { TokenActivityItem } from "@/features/token/token-activity";
+import type { TraitFacet } from "@/features/token/use-trait-rarity";
 
 // Public browse snapshots only. Trading still revalidates current terms and policy.
 const readOptions = { staleTime: 15_000, retry: false as const };
@@ -66,5 +68,20 @@ export function collectionActivityOptions(address: string, filter: ActivityFilte
     getNextPageParam: (page: ApiPage<ActivityEvent>) => page.nextCursor ?? undefined,
     queryKey: publicQueryKey(["collection-activity", address, filter, limit]),
     queryFn: ({ pageParam, signal }) => marketplaceRequest<ApiPage<ActivityEvent>>(`/collections/${address}/activity`, { type, limit, cursor: pageParam }, undefined, signal),
+  });
+}
+
+export function tokenActivityOptions(address: string, tokenId: string) {
+  return infiniteQueryOptions({ ...readOptions,
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (page: ApiPage<TokenActivityItem>) => page.nextCursor ?? undefined,
+    queryKey: publicQueryKey(["token-activity", address, tokenId]),
+    queryFn: ({ pageParam, signal }) => marketplaceRequest<ApiPage<TokenActivityItem>>(`/tokens/${address}/${tokenId}/activity`, { limit: 20, cursor: pageParam }, undefined, signal),
+  });
+}
+export function traitFacetsOptions(address: string) {
+  return queryOptions({ ...readOptions, staleTime: 5 * 60_000,
+    queryKey: publicQueryKey(["trait-facets", address]),
+    queryFn: ({ signal }) => marketplaceRequest<TraitFacet[]>(`/collections/${address}/traits`, {}, undefined, signal),
   });
 }

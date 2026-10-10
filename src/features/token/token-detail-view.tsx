@@ -33,7 +33,7 @@ import { OrderComposer } from "@/features/trading/order-composer";
 import { ReportToken } from "@/features/trading/report-token";
 import { normalizeMarketplaceAddress } from "@/lib/marketplace/address";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
-import { marketplaceRequest } from "@/lib/marketplace/api-client";
+import { tokenActivityOptions } from "@/lib/marketplace/public-queries";
 import { getMarketplaceRuntimeConfig } from "@/lib/marketplace/config";
 import {
   useCollectionListingsQuery,
@@ -48,12 +48,11 @@ import {
   tokenMediaSources,
   tokenName,
 } from "@/lib/marketplace/token-display";
-import type { ApiPage } from "@/lib/marketplace/types";
 import { useTrade } from "@/lib/marketplace/use-trade";
 import { toAbsoluteUrl } from "@/lib/seo/site-url";
 import { ListingPurchase } from "./listing-purchase";
 import { OfferList } from "./offer-list";
-import { TokenActivity, type TokenActivityItem } from "./token-activity";
+import { TokenActivity } from "./token-activity";
 import {
   pickLastSale,
   pickTopOffer,
@@ -133,16 +132,7 @@ export function TokenDetailView({
     tokenMatch: tokenId,
     limit: 50,
   });
-  const activity = useInfiniteQuery<ApiPage<TokenActivityItem>>({
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (page) => page.nextCursor ?? undefined,
-    queryKey: ["owned", "activity", address, tokenId],
-    queryFn: ({ pageParam }) =>
-      marketplaceRequest<ApiPage<TokenActivityItem>>(
-        `/tokens/${address}/${tokenId}/activity`,
-        { limit: 20, cursor: pageParam },
-      ),
-  });
+  const activity = useInfiniteQuery(tokenActivityOptions(address, tokenId));
   const [composer, setComposer] = useState<ComposerKind | null>(null);
   const [dismissedShareFor, setDismissedShareFor] = useState<string | null>(null);
   const composerId = useId();

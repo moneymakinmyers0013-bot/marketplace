@@ -361,3 +361,9 @@ loading regions; existing loading, empty and error stories remain applicable.
 Prefetched stats and the filtered fixture collection were reviewed at
 390/768/1440px. Query hydration tests cover independent currency, filter, cursor
 and deployment identities plus cancellation of slow reads.
+
+`Marketplace/Public page data/PrefetchedHome` and `Mobile` use the same home
+prefetch adapter as server delivery. Primary and secondary data use one query
+identity; the streaming unit test holds secondary data open while primary data
+remains available. Home and token fixture layouts were checked at
+390/768/1440px. The token holder check and wallet/authentication reads remain live.
