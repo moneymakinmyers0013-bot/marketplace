@@ -1,10 +1,7 @@
-"use client";
-
 import { MarketplaceTokenCard } from "@/components/marketplace/token-card";
 import { AssetCardSkeleton } from "@/components/marketplace/loading-state";
 import { SectionHeader } from "@/components/marketplace/section-header";
 import type { TrendingToken } from "@/features/home/types";
-import { useEntrance } from "@/lib/animation";
 
 /** Every card in the rail shares one width so names, prices and notes line up. */
 const CARD_WIDTH = "w-44 shrink-0 sm:w-48";
@@ -22,13 +19,6 @@ export function TrendingTokensSection({
   title = "Trending Tokens",
   emptyMessage = "No trending tokens",
 }: TrendingTokensSectionProps) {
-  const scrollRef = useEntrance<HTMLDivElement>({
-    selector: "[data-trending-item]",
-    staggerDelay: 60,
-    translateX: -12,
-    translateY: 0,
-  });
-
   return (
     <section data-testid="trending-tokens" className="space-y-3">
       <SectionHeader title={title} />
@@ -50,7 +40,7 @@ export function TrendingTokensSection({
           <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-r from-background to-transparent" />
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-l from-background to-transparent" />
           <div data-testid="trending-tokens-scroll" className="overflow-x-auto">
-            <div ref={scrollRef} className="flex gap-3 pb-2">
+            <div className="flex gap-3 pb-2">
               {tokens.map((entry, index) => (
                 <div key={`${entry.href}-${index}`} className={CARD_WIDTH} data-trending-item>
                   <MarketplaceTokenCard

@@ -45,7 +45,6 @@ import {
 import { COLLECTION_LISTING_SAMPLE_LIMIT } from "@/lib/marketplace/query-limits";
 import { realmResources } from "@/lib/marketplace/token-attributes";
 import { cn } from "@/lib/utils";
-import { useEntrance } from "@/lib/animation";
 import {
   cartItemFromTokenListing,
   cheapestListingByTokenId,
@@ -379,12 +378,7 @@ export function CollectionTokenGrid({
 
   // Grid entrance stagger animation — re-triggers on filter/sort changes via key
   const gridAnimationKey = `${activeFiltersKey}-${sortMode}-${gridMode}`;
-  const gridRef = useEntrance<HTMLDivElement>({
-    selector: "[data-token-card]",
-    staggerDelay: 30,
-    translateY: 12,
-    threshold: 0.05,
-  });
+
 
   return (
     <section className="space-y-4" data-testid="collection-token-grid">
@@ -415,8 +409,7 @@ export function CollectionTokenGrid({
 
       {!tokenQuery.isLoading && !isListMode ? (
         <AssetGrid
-          ref={gridRef}
-          key={gridAnimationKey}
+                    key={gridAnimationKey}
           density={density}
           data-testid="collection-token-grid-cards"
         >

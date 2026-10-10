@@ -1,4 +1,4 @@
-import { HydrationBoundary } from "@tanstack/react-query";
+import { PublicHydrationBoundary } from "@/components/providers/public-hydration-boundary";
 import { MarketplaceHome } from "@/components/marketplace/marketplace-home";
 import { streamedPublicHydrationState } from "@/lib/marketplace/server-hydration";
 import { prefetchHomeSections } from "@/lib/marketplace/public-prefetch";
@@ -9,5 +9,5 @@ export async function HomePageData() {
     await client.prefetchQuery(homeCollectionsOptions());
     return client.getQueryState(homeCollectionsOptions().queryKey)?.status === "success";
   }, client => prefetchHomeSections(client));
-  return <HydrationBoundary state={state}><MarketplaceHome /></HydrationBoundary>;
+  return <PublicHydrationBoundary state={state}><MarketplaceHome /></PublicHydrationBoundary>;
 }

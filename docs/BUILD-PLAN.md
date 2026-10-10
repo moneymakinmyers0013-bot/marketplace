@@ -451,8 +451,16 @@ the SDK's existing 15-second per-read timeout. Home search skips unrelated catal
 prefetch. Hydration, streaming and relevant feature tests pass; Storybook, app
 build, types and lint pass. In the fixture browser, home requests only current
 configuration after hydration; token keeps current configuration, authentication
-and its independent holder check. No real wallet request was made. Startup and
-navigation improvements are next.
+and its independent holder check. No real wallet request was made. Priority 4 is implemented: Controller loads only for explicit connection or
+remembered-session readiness; its core connector events and retry behavior are
+preserved. The cart's checkout body loads inside the opened sheet. Its trigger
+now participates in Radix focus restoration. Home and collection entrance fades
+no longer hide already-delivered content. A production-only streaming hydration
+race was reproduced and fixed: pending results attach after matching the initial
+markup, with query observers held until the server promises are installed.
+All 886 unit/Storybook tests, both builds, types and scoped lint pass. Production
+fixture browsing reports no hydration error or Controller iframe; real-wallet
+reconnect/signing remains unverified. Navigation prefetching is next.
 
 ### Release preparation — 7 October 2026
 

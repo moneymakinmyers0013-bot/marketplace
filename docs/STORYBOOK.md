@@ -367,3 +367,10 @@ prefetch adapter as server delivery. Primary and secondary data use one query
 identity; the streaming unit test holds secondary data open while primary data
 remains available. Home and token fixture layouts were checked at
 390/768/1440px. The token holder check and wallet/authentication reads remain live.
+
+`Trading/Cart/OpenWithKeyboard` verifies deferred checkout content, Enter to open,
+Escape to close and restored trigger focus. Existing cart stories still cover
+empty, wallet-required, rejected, unavailable and accepted states. Cart layouts
+were reviewed at 390/768/1440px. Home/collection entrance fades were removed so
+SSR content stays visible. The streamed-hydration regression test covers a query
+resolving before the browser's first render, without a duplicate browser fetch.

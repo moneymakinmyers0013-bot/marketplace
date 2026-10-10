@@ -1,10 +1,7 @@
-"use client";
 import { MarketPrice } from "@/components/marketplace/market-price";
 import { StatTile } from "@/components/marketplace/stat-tile";
 
-import { useRef, useEffect } from "react";
 import Link from "next/link";
-import { animate, stagger } from "animejs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { localImageProps } from "@/lib/marketplace/local-image";
@@ -33,20 +30,6 @@ export function HeroBanner({
   listingCount,
   isLoading = false,
 }: HeroBannerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || isLoading) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    animate(el.querySelectorAll(".hero-image"), { opacity: [0, 1], duration: 600, ease: "easeOutCubic" });
-    animate(el.querySelectorAll(".hero-overlay"), { opacity: [0, 1], translateY: [20, 0], duration: 400, delay: 200, ease: "easeOutCubic" });
-    animate(el.querySelectorAll(".hero-title"), { opacity: [0, 1], translateY: [16, 0], duration: 500, delay: 300, ease: "easeOutCubic" });
-    animate(el.querySelectorAll(".hero-stat"), { opacity: [0, 1], translateY: [12, 0], delay: stagger(80, { start: 400 }), duration: 500, ease: "easeOutCubic" });
-    animate(el.querySelectorAll(".hero-cta"), { opacity: [0, 1], duration: 400, delay: 600, ease: "easeOutCubic" });
-  }, [isLoading]);
-
   if (isLoading) {
     return (
       <div role="status" aria-label="Loading featured collection" data-testid="hero-banner" className="relative h-56 w-full overflow-hidden rounded-[8px] border border-[color:var(--realm-border-etched)] sm:h-72 lg:h-80">
@@ -57,7 +40,6 @@ export function HeroBanner({
 
   return (
     <div
-      ref={containerRef}
       data-testid="hero-banner"
       className="relative h-56 w-full overflow-hidden rounded-[8px] border border-[color:var(--realm-border-etched)] sm:h-72 lg:h-80"
     >

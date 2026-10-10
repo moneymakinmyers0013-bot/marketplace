@@ -2,7 +2,7 @@
 import { CollectionBanner } from "./collection-banner";
 import { CollectionBrowseLayout } from "./collection-browse-layout";
 import { useSweepCandidates } from "./use-sweep-candidates";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { NormalizedToken } from "@/lib/marketplace/types";
 import {
   useCollectionQuery,
@@ -19,7 +19,6 @@ import {
   type ActiveFilters,
   type TraitSelection,
 } from "@/lib/marketplace/traits";
-import { animate, stagger } from "animejs";
 import dynamic from "next/dynamic";
 import { CollectionTokenGrid, type GridLayoutMode } from "@/features/collections/collection-token-grid";
 import { TraitFilterSidebar } from "@/features/collections/trait-filter-sidebar";
@@ -200,36 +199,6 @@ export function CollectionRouteView({
   const sortOptions = collectionFilterConfig.sortOptions ?? DEFAULT_SORT_OPTIONS;
 
   // Hero entrance animation
-  const heroRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
-      hero.querySelectorAll<HTMLElement>(".hero-image, .hero-content > *").forEach((el) => {
-        el.style.opacity = "1";
-        el.style.transform = "none";
-      });
-      return;
-    }
-
-    const img = hero.querySelector<HTMLElement>(".hero-image");
-    if (img) {
-      animate(img, { opacity: [0, 1], duration: 600, ease: "easeOutCubic" });
-    }
-
-    const contentChildren = hero.querySelectorAll<HTMLElement>(".hero-content > *");
-    if (contentChildren.length > 0) {
-      animate(contentChildren, {
-        opacity: [0, 1],
-        translateY: [12, 0],
-        delay: stagger(60, { start: 300 }),
-        duration: 500,
-        ease: "spring(1, 120, 20, 0)",
-      });
-    }
-  }, [address]);
-
   const visibleTokens = visibleTokensByScope[sweepScopeKey] ?? EMPTY_VISIBLE_TOKENS;
 
   const sweepQuery = useSweepCandidates(address, resolvedActiveFilters);
@@ -313,7 +282,7 @@ export function CollectionRouteView({
 
   return (
     <section className="w-full space-y-8 pb-20">
-      <CollectionBanner ref={heroRef} image={headerImage} name={displayName ?? selectedCollection?.name ?? address}>
+      <CollectionBanner image={headerImage} name={displayName ?? selectedCollection?.name ?? address}>
         <div className="flex w-full flex-col gap-3 lg:w-auto lg:items-end">
           <CurrencySwitcher label="Browse in" showBalance />
           <CollectionStatsStrip address={address} currency={currency} />
