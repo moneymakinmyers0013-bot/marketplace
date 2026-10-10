@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select";
 import type { CollectionSortOption } from "@/lib/marketplace/collection-filter-config";
 import type { CollectionSortMode } from "@/features/collections/collection-query-params";
-import { cn } from "@/lib/utils";
 
 export type GridLayoutMode = "compact" | "dense" | "list";
 
@@ -130,7 +129,7 @@ export function CollectionToolbar({
       </label>
 
       <Select value={sortValue} onValueChange={(value) => onSortModeChange(value as CollectionSortMode)}>
-        <SelectTrigger aria-label="Sort items" className="h-10 min-w-44 text-xs">
+        <SelectTrigger aria-label="Sort items" className="min-w-44 text-xs data-[size=default]:h-10">
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>
@@ -149,7 +148,7 @@ export function CollectionToolbar({
         onValueChange={(value) => {
           if (value) onLayoutChange(value as GridLayoutMode);
         }}
-        className="inline-flex h-10 items-center rounded-md border border-[color:var(--realm-border-etched)] bg-[color:var(--realm-surface-iron)]/80 p-0.5"
+        className="market-segmented h-10"
       >
         {(
           [
@@ -163,10 +162,7 @@ export function CollectionToolbar({
             value={value}
             aria-label={label}
             title={label}
-            className={cn(
-              "flex size-9 items-center justify-center rounded-[6px] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              "data-[state=on]:bg-primary/15 data-[state=on]:text-foreground",
-            )}
+            className="market-segment w-9"
           >
             <Icon className="size-4" />
           </ToggleGroupPrimitive.Item>
@@ -174,7 +170,7 @@ export function CollectionToolbar({
       </ToggleGroupPrimitive.Root>
 
       {resultSummary ? (
-        <p className="basis-full text-xs text-muted-foreground sm:ml-auto sm:basis-auto" aria-live="polite">
+        <p className="market-label basis-full tabular-nums sm:ml-auto sm:basis-auto" aria-live="polite">
           {resultSummary}
         </p>
       ) : null}

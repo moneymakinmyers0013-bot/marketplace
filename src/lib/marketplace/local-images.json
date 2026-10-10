@@ -1,0 +1,160 @@
+{
+  "/banners/adventurers.png": {
+    "width": 3264,
+    "height": 1312,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/banners/adventurers-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/banners/adventurers-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/banners/adventurers-640.webp"
+      },
+      {
+        "width": 1280,
+        "url": "/optimized/banners/adventurers-1280.webp"
+      },
+      {
+        "width": 1920,
+        "url": "/optimized/banners/adventurers-1920.webp"
+      }
+    ]
+  },
+  "/banners/beasts.jpg": {
+    "width": 1600,
+    "height": 643,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/banners/beasts-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/banners/beasts-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/banners/beasts-640.webp"
+      },
+      {
+        "width": 1280,
+        "url": "/optimized/banners/beasts-1280.webp"
+      }
+    ]
+  },
+  "/banners/cosmetics.jpg": {
+    "width": 3000,
+    "height": 1200,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/banners/cosmetics-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/banners/cosmetics-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/banners/cosmetics-640.webp"
+      },
+      {
+        "width": 1280,
+        "url": "/optimized/banners/cosmetics-1280.webp"
+      },
+      {
+        "width": 1920,
+        "url": "/optimized/banners/cosmetics-1920.webp"
+      }
+    ]
+  },
+  "/banners/golden-token.png": {
+    "width": 1672,
+    "height": 941,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/banners/golden-token-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/banners/golden-token-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/banners/golden-token-640.webp"
+      },
+      {
+        "width": 1280,
+        "url": "/optimized/banners/golden-token-1280.webp"
+      }
+    ]
+  },
+  "/banners/loot-chests.png": {
+    "width": 1920,
+    "height": 918,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/banners/loot-chests-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/banners/loot-chests-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/banners/loot-chests-640.webp"
+      },
+      {
+        "width": 1280,
+        "url": "/optimized/banners/loot-chests-1280.webp"
+      },
+      {
+        "width": 1920,
+        "url": "/optimized/banners/loot-chests-1920.webp"
+      }
+    ]
+  },
+  "/banners/realms.png": {
+    "width": 1254,
+    "height": 1254,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/banners/realms-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/banners/realms-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/banners/realms-640.webp"
+      }
+    ]
+  },
+  "/collection-images/cosmetics.jpg": {
+    "width": 1024,
+    "height": 1024,
+    "variants": [
+      {
+        "width": 64,
+        "url": "/optimized/collection-images/cosmetics-64.webp"
+      },
+      {
+        "width": 256,
+        "url": "/optimized/collection-images/cosmetics-256.webp"
+      },
+      {
+        "width": 640,
+        "url": "/optimized/collection-images/cosmetics-640.webp"
+      }
+    ]
+  }
+}

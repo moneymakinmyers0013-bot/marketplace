@@ -86,7 +86,7 @@ export function SweepBar({
 
   return (
     <div className="realm-panel sticky bottom-3 z-30 backdrop-blur-md">
-      <div className="w-full px-4">
+      <div className="w-full px-4 sm:px-5">
         {selectedCount > 0 && (
           <div className="overflow-x-auto pt-2 pb-1">
             <SweepThumbnails items={selectedCandidates} />
@@ -94,8 +94,8 @@ export function SweepBar({
         )}
         <div className="flex items-center gap-3 py-2">
           <div className="min-w-20 shrink-0">
-            <p className="realm-title text-lg">Sweep</p>
-            <p className="text-xs text-muted-foreground">
+            <h2 className="market-section-title">Sweep</h2>
+            <p className="text-xs text-muted-foreground tabular-nums">
               {selectedCount > 0 ? (
                 <span className="flex items-center gap-1">
                   {selectedCount} &middot; {formattedTotal}

@@ -1,5 +1,5 @@
 import { expect } from "storybook/test";
-import { exo2, geistMono } from "@/lib/fonts";
+import { exo2, monaspaceXenon } from "@/lib/fonts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,7 +44,7 @@ function Foundations() {
             Exo 2 · interface text, labels and descriptions.
           </p>
           <p className="font-mono text-sm">
-            Geist Mono · 0x0123…abcd · 12.345 STRK
+            Monaspace Xenon · 0x0123…abcd · #1024 · 2026-10-08 22:57
           </p>
           <p className="text-sm text-muted-foreground">
             Spacing, border radius and semantic colors come directly from
@@ -67,10 +67,10 @@ const meta = {
     ).toContain(exo2.style.fontFamily.split(",")[0].replace(/['"]/g, ""));
     await expect(
       getComputedStyle(
-        canvas.getByText("Geist Mono · 0x0123…abcd · 12.345 STRK"),
+        canvas.getByText("Monaspace Xenon · 0x0123…abcd · #1024 · 2026-10-08 22:57"),
       ).fontFamily,
-    ).toContain(geistMono.style.fontFamily.split(",")[0].replace(/['"]/g, ""));
-    for (const family of [exo2.style.fontFamily, geistMono.style.fontFamily]) {
+    ).toContain(monaspaceXenon.style.fontFamily.split(",")[0].replace(/['"]/g, ""));
+    for (const family of [exo2.style.fontFamily, monaspaceXenon.style.fontFamily]) {
       const loaded = await document.fonts.load(`16px ${family}`);
       await expect(loaded.length).toBeGreaterThan(0);
     }

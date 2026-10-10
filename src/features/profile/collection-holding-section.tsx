@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { MarketplaceTokenCard } from "@/components/marketplace/token-card";
 import { AssetGridSkeleton } from "@/components/marketplace/loading-state";
+import { SectionHeader } from "@/components/marketplace/section-header";
 import {
   useCollectionQuery,
   useCollectionTokensQuery,
@@ -61,12 +62,11 @@ export function CollectionHoldingSection({
 
   return (
     <section className="space-y-3">
-      <div className="flex items-center gap-2 border-b border-[color:var(--realm-border-etched)] pb-2">
-        <h2 className="realm-kicker text-lg">{resolvedCollectionName}</h2>
-        <span className="rounded-[6px] border border-[color:var(--realm-border-etched)] bg-muted/60 px-2 py-0.5 text-xs text-muted-foreground">
-          {tokenIds.length}
-        </span>
-      </div>
+      <SectionHeader
+        title={resolvedCollectionName}
+        count={tokenIds.length}
+        className="border-b border-[color:var(--realm-border-etched)] pb-2"
+      />
 
       {batches.map((ids, i) => (
         <HoldingTokenBatch

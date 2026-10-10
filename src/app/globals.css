@@ -47,7 +47,7 @@
   --font-serif: "IM Fell English SC", Cinzel, serif;
   --font-title: "IM Fell English SC", Cinzel, serif;
   --font-ui: var(--font-exo-2), Rajdhani, sans-serif;
-  --font-mono: var(--font-geist-mono), JetBrains Mono, monospace;
+  --font-mono: var(--font-monaspace-xenon), ui-monospace, monospace;
   --realm-bg-void: #050709;
   --realm-bg-smoke: #070b0d;
   --realm-surface-iron: #101417;
@@ -55,11 +55,11 @@
   --realm-accent-ember: #c4874a;
   --realm-accent-brass: #e7cf88;
   --realm-accent-arcane: #8d98c8;
-  --realm-border-etched: rgba(231, 207, 136, 0.22);
-  --realm-border-strong: rgba(231, 207, 136, 0.38);
+  --realm-border-etched: rgba(231, 207, 136, 0.16);
+  --realm-border-strong: rgba(231, 207, 136, 0.34);
   --realm-text: #e8dcc2;
   --realm-text-muted: #d8c8a8;
-  --realm-title: #f5ead0;
+  --realm-title: var(--foreground);
   --radius: 0.5rem;
   --shadow-2xs: none;
   --shadow-xs: none;
@@ -92,7 +92,7 @@
   --accent-foreground: #f5ead0;
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.95 0 0);
-  --border: rgba(231, 207, 136, 0.24);
+  --border: rgba(231, 207, 136, 0.16);
   --input: rgba(231, 207, 136, 0.28);
   --ring: #e7cf88;
   --chart-1: oklch(0.70 0.15 75);
@@ -106,13 +106,13 @@
   --sidebar-primary-foreground: #17110a;
   --sidebar-accent: #161b20;
   --sidebar-accent-foreground: #f5ead0;
-  --sidebar-border: rgba(231, 207, 136, 0.22);
+  --sidebar-border: rgba(231, 207, 136, 0.16);
   --sidebar-ring: oklch(0.87 0.01 286.29);
   --font-sans: var(--font-exo-2), ui-sans-serif, system-ui, sans-serif;
   --font-serif: "IM Fell English SC", Cinzel, serif;
   --font-title: "IM Fell English SC", Cinzel, serif;
   --font-ui: var(--font-exo-2), Rajdhani, sans-serif;
-  --font-mono: var(--font-geist-mono), JetBrains Mono, monospace;
+  --font-mono: var(--font-monaspace-xenon), ui-monospace, monospace;
   --realm-bg-void: #050709;
   --realm-bg-smoke: #070b0d;
   --realm-surface-iron: #101417;
@@ -120,8 +120,8 @@
   --realm-accent-ember: #c4874a;
   --realm-accent-brass: #e7cf88;
   --realm-accent-arcane: #8d98c8;
-  --realm-border-etched: rgba(231, 207, 136, 0.22);
-  --realm-border-strong: rgba(231, 207, 136, 0.38);
+  --realm-border-etched: rgba(231, 207, 136, 0.16);
+  --realm-border-strong: rgba(231, 207, 136, 0.34);
   --realm-text: #e8dcc2;
   --realm-text-muted: #d8c8a8;
   --realm-title: #f5ead0;
@@ -206,12 +206,11 @@
     font-family: var(--font-sans);
     letter-spacing: 0;
     background:
-      radial-gradient(circle at 50% -10%, rgba(231, 207, 136, 0.1), transparent 34rem),
-      radial-gradient(circle at 92% 18%, rgba(141, 152, 200, 0.08), transparent 28rem),
+      radial-gradient(circle at 50% -10%, rgba(231, 207, 136, 0.045), transparent 34rem),
       linear-gradient(180deg, #040607 0%, #070b0d 54%, #050709 100%);
     background-attachment: fixed;
-    background-position: center top, center top, center center;
-    background-size: auto, auto, auto;
+    background-position: center top, center center;
+    background-size: auto, auto;
   }
   h1,
   h2,
@@ -226,7 +225,11 @@
   aside {
     background: color-mix(in oklab, var(--sidebar) 94%, transparent);
   }
-  [data-slot="card"],
+  /* Grounded surfaces have one edge; only floating layers cast a shadow. */
+  [data-slot="card"] {
+    background: var(--card);
+    border-color: var(--realm-border-etched);
+  }
   [data-slot="dialog-content"],
   [data-slot="sheet-content"],
   [data-slot="dropdown-menu-content"],
@@ -234,23 +237,16 @@
   [data-slot="tooltip-content"],
   [data-slot="hover-card-content"],
   [data-slot="popover-content"] {
-    background: linear-gradient(160deg, rgba(22, 27, 32, 0.96), rgba(7, 11, 13, 0.94));
-    border-color: var(--realm-border-etched);
-    border-radius: 8px;
-    box-shadow:
-      inset 0 1px 0 rgba(231, 207, 136, 0.08),
-      0 18px 36px rgba(0, 0, 0, 0.32);
+    background: var(--popover);
+    border-color: var(--realm-border-strong);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   }
   [data-slot="button"][data-variant="default"] {
-    border: 1px solid rgba(245, 234, 208, 0.28);
-    background: linear-gradient(180deg, #e7cf88 0%, #caa75d 100%);
-    color: #17110a;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.28),
-      0 8px 20px rgba(231, 207, 136, 0.14);
+    background: var(--primary);
+    color: var(--primary-foreground);
   }
   [data-slot="button"][data-variant="default"]:hover {
-    background: linear-gradient(180deg, #f1dc9d 0%, #d4b46b 100%);
+    background: color-mix(in oklab, var(--primary) 90%, white);
   }
   [data-slot="button"][data-variant="outline"],
   [data-slot="button"][data-variant="ghost"] {
@@ -258,8 +254,8 @@
   }
   [data-slot="select-trigger"],
   [data-slot="input"] {
-    border-color: var(--realm-border-etched);
-    background: color-mix(in oklab, var(--realm-surface-iron) 80%, transparent);
+    border-color: var(--input);
+    background: var(--card);
   }
   [data-slot="select-trigger"]:hover {
     border-color: var(--realm-border-strong);
@@ -282,12 +278,10 @@
     color: var(--realm-text);
   }
   .realm-panel {
-    background: linear-gradient(160deg, rgba(16, 20, 23, 0.94), rgba(7, 11, 13, 0.92));
+    background: var(--card);
     border: 1px solid var(--realm-border-etched);
     border-radius: 8px;
-    box-shadow:
-      inset 0 1px 0 rgba(231, 207, 136, 0.08),
-      0 18px 36px rgba(0, 0, 0, 0.28);
+
   }
   .realm-kicker {
     color: var(--realm-accent-brass);
@@ -297,10 +291,10 @@
     text-transform: uppercase;
   }
   .realm-stat-pill {
-    background: rgba(5, 7, 9, 0.72);
-    border: 1px solid var(--realm-border-etched);
+    background: color-mix(in oklab, var(--background) 72%, transparent);
+    border: 1px solid color-mix(in oklab, var(--realm-border-etched) 65%, transparent);
     border-radius: 6px;
-    box-shadow: inset 0 1px 0 rgba(231, 207, 136, 0.08);
+
   }
   ::selection {
     background: oklch(0.75 0.15 75 / 0.3);
@@ -310,16 +304,8 @@
 
 
 .realm-market-header-shell {
-  border: 1px solid color-mix(in oklab, var(--realm-border-strong) 70%, transparent);
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in oklab, var(--realm-surface-iron) 62%, transparent),
-      color-mix(in oklab, var(--realm-bg-void) 62%, transparent)
-    );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--realm-accent-brass) 14%, transparent),
-    0 10px 22px color-mix(in oklab, black 40%, transparent);
+  border: 1px solid var(--realm-border-etched);
+  background: color-mix(in oklab, var(--realm-surface-iron) 94%, transparent);
 }
 
 .realm-nav-link {
@@ -415,4 +401,116 @@
   fill: var(--realm-text-muted);
   font-family: var(--font-sans);
   font-size: 10px;
+}
+
+/*
+ * Marketplace type hierarchy. One style per level; see Foundations/Hierarchy.
+ *   page title    → IM Fell, cream, 30px / 36px from 640px
+ *   section title → IM Fell, brass, 18px (page sections, including bordered panels)
+ *   group title   → Exo 2 semibold, cream, 14px (charts, form groups, sub-panels)
+ *   label         → Exo 2, muted, 12px, sentence case (stat and field labels)
+ * Body copy is 14px; supporting copy and metadata are 12px muted.
+ */
+@layer components {
+  .market-page-title {
+    color: var(--realm-title);
+    font-family: var(--font-title);
+    font-size: 1.875rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+  @media (min-width: 640px) {
+    .market-page-title { font-size: 2.25rem; }
+  }
+  .market-section-title {
+    color: var(--realm-accent-brass);
+    font-family: var(--font-title);
+    font-size: 1.125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.5rem;
+    text-transform: uppercase;
+  }
+  .market-group-title {
+    color: var(--realm-title);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.25rem;
+    text-transform: none;
+  }
+  .market-label {
+    color: var(--muted-foreground);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1rem;
+    text-transform: none;
+  }
+
+  /* Segmented control: period, event-type, layout and chart/table toggles. Works for
+     Radix toggle items (data-state) and pressed buttons (aria-pressed). Height is set per use. */
+  .market-segmented {
+    display: inline-flex;
+    align-items: stretch;
+    max-width: 100%;
+    padding: 0.125rem;
+    border: 1px solid var(--realm-border-etched);
+    border-radius: 8px;
+    background: color-mix(in oklab, var(--realm-surface-iron) 80%, transparent);
+  }
+  .market-segment {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1rem;
+    text-transform: uppercase;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+  .market-segment:hover {
+    color: var(--foreground);
+  }
+  .market-segment[data-state="on"],
+  .market-segment[aria-pressed="true"] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: 600;
+  }
+
+  /*
+   * Monaspace Xenon marks machine data: token ids, addresses, hashes and timestamps
+   * (`font-mono`), and chips — badges, filter chips, counts, trait keys and segmented
+   * filters (`.market-chip`, 11px uppercase). Prices, labels, headings and body copy
+   * stay in Exo 2 and IM Fell.
+   */
+  .market-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1rem;
+    text-transform: uppercase;
+  }
+  .market-segment:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+}
+
+/* Error copy uses a lighter red than destructive button fills on dark surfaces. */
+@layer utilities {
+  .dark .text-destructive {
+    color: oklch(0.72 0.16 25);
+  }
 }

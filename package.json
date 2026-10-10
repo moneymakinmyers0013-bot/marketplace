@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "images:build": "node scripts/images/build-local-images.mjs",
     "dev": "pnpm sdk:build && next dev",
     "dev:https": "pnpm sdk:build && node scripts/dev/dev-https.mjs",
     "build": "pnpm sdk:build && next build",
@@ -94,6 +95,7 @@
     "playwright": "^1.58.2",
     "railway": "3.13.0",
     "shadcn": "^3.8.5",
+    "sharp": "0.35.5",
     "starknet-devnet-sdk": "npm:starknet@10.8.0",
     "storybook": "10.6.1",
     "tailwindcss": "^4",

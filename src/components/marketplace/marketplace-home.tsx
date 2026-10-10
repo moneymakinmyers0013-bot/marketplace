@@ -10,6 +10,7 @@ import { TrendingTokensSection } from "@/features/home/trending-tokens-section";
 import { useHomePageData } from "@/features/home/use-home-page-data";
 import { useRecentSales } from "@/features/home/use-recent-sales";
 import { CurrencySwitcher } from "@/features/trading/currency-switcher";
+import { SectionHeader } from "@/components/marketplace/section-header";
 import { useMarketCurrency } from "@/lib/marketplace/currency-store";
 import { matchesHomeSearch, normalizeHomeSearchQuery } from "@/lib/marketplace/home-search";
 
@@ -65,7 +66,8 @@ export function MarketplaceHome() {
   }
 
   return (
-    <main data-testid="marketplace-home" className="market-page flex-1 space-y-6">
+    <main data-testid="marketplace-home" className="market-page flex-1 space-y-8">
+      <h1 className="sr-only">Realms Market</h1>
       <HeroBanner
         name={featuredCollection?.name ?? "Featured Collection"}
         address={featuredCollection?.address ?? ""}
@@ -86,24 +88,31 @@ export function MarketplaceHome() {
         />
       ) : null}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 space-y-3" aria-labelledby="collections-heading">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 id="collections" className="realm-kicker scroll-mt-52 text-lg">
-              Collections
-            </h2>
-            <CurrencySwitcher label="Prices in" hideHelp />
-          </div>
-          <span id="collections-heading" className="sr-only">
-            Collections
-          </span>
+      {/* Two rows shared through subgrid: both headers sit on one line and both panels start level. */}
+      <div className="grid grid-cols-1 gap-x-6 gap-y-3 lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[auto_1fr]">
+        <section
+          id="collections"
+          className="grid min-w-0 scroll-mt-52 gap-3 lg:row-span-2 lg:grid-rows-subgrid"
+          aria-labelledby="collections-heading"
+        >
+          <SectionHeader
+            id="collections-heading"
+            title="Collections"
+            className="min-h-10 items-center"
+            action={<CurrencySwitcher label="Prices in" hideHelp />}
+          />
           <CollectionsTable collections={filteredCollections} currency={currency} isLoading={isLoading} />
         </section>
 
         {promotedCollection && !isLoading ? (
-          <aside className="hidden lg:block" aria-label="Spotlight">
-            <h2 className="realm-kicker mb-3 text-lg">Spotlight</h2>
-            <PromotedCollection {...promotedCollection} />
+          <aside
+            className="hidden min-w-0 gap-3 lg:row-span-2 lg:grid lg:grid-rows-subgrid"
+            aria-labelledby="spotlight-heading"
+          >
+            <SectionHeader id="spotlight-heading" title="Spotlight" className="min-h-10 items-center" />
+            <div>
+              <PromotedCollection {...promotedCollection} />
+            </div>
           </aside>
         ) : null}
       </div>

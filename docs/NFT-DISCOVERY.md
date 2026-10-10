@@ -142,6 +142,12 @@ Browser checks used isolated Chromium and HTTP fixtures: 27 story layouts and ni
 Next.js route layouts at 320/768/1440px plus four route interaction flows.
 No staging, production-wallet or complete chain indexing was exercised.
 
+After integrating current main `d641026` (page delivery and global UI changes),
+the discovery UI unit tests (9), Storybook tests (13), 27 story layouts, nine
+route layouts/four flows, full lint, typecheck, Next.js build and release tree
+check passed again. Backend and SDK source did not change during this integration;
+their counts above are from the preceding implementation verification.
+
 Two existing PostgreSQL tests used timing assumptions: metadata overlap failed on
 the clean base commit too, and replay statistics crossed wall-clock seconds.
 The tests now use an explicit concurrency barrier and fixed clock respectively.

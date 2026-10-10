@@ -3,7 +3,7 @@ import { AssetGridSkeleton, ListSkeleton } from "@/components/marketplace/loadin
 import { WalletConnectButton } from "@/components/layout/wallet-connect-button";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 import { useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useQuery } from "@tanstack/react-query";
 import { useTrade } from "@/lib/marketplace/use-trade";
 import { marketplaceRequest, tokenFromApi } from "@/lib/marketplace/api-client";
@@ -161,10 +161,10 @@ export function TraderDashboard() {
     setSelected([]);
   }
   return (
-    <main className="market-page mx-auto max-w-7xl space-y-4">
-      <div>
-        <h1 className="realm-title text-3xl">Trading dashboard</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+    <main className="market-page mx-auto max-w-7xl space-y-6">
+      <div className="space-y-2">
+        <h1 className="market-page-title">Trading dashboard</h1>
+        <p className="text-sm text-muted-foreground">
           Manage your inventory, listings and offers.
         </p>
       </div>

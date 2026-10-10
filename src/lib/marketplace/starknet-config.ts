@@ -1,4 +1,4 @@
-import { ControllerConnector } from "@cartridge/connector";
+import { DeferredControllerConnector } from "./deferred-controller";
 import { mainnet, sepolia } from "@starknet-react/chains";
 import {
   braavos,
@@ -8,7 +8,7 @@ import {
 } from "@starknet-react/core";
 import type { MarketplaceRuntimeConfig } from "@/lib/marketplace/config";
 
-const controllers = new Map<string, ControllerConnector>();
+const controllers = new Map<string, DeferredControllerConnector>();
 export function buildStarknetConfig(
   chainLabel: MarketplaceRuntimeConfig["chainLabel"],
 ) {
@@ -31,7 +31,10 @@ export function buildStarknetConfig(
   if (!controller) {
     // Controller owns its wallet transport. Custom RPC configuration performs synchronous
     // network I/O in this SDK constructor and would break browsing during an outage.
-    controller = new ControllerConnector({ defaultChainId });
+    controller = new DeferredControllerConnector(async () => {
+      const { ControllerConnector } = await import("@cartridge/connector");
+      return new ControllerConnector({ defaultChainId });
+    });
     controllers.set(key, controller);
   }
   return {

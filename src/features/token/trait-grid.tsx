@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import {
   ResourceIcon,
   resolveResourceIcon,
@@ -69,14 +69,18 @@ export function formatTraitShare(share: number) {
 
 function ShareNote({ share }: { share: number }) {
   return (
-    <span className="text-[11px] text-muted-foreground">
+    <span className="text-xs text-muted-foreground">
       {formatTraitShare(share)} have this
     </span>
   );
 }
 
+/** Matches the trait group names in the collection filter sidebar. */
+const traitNameClassName =
+  "market-chip text-muted-foreground";
+
 const linkClassName =
-  "realm-stat-pill flex min-h-11 flex-col justify-center gap-0.5 px-3 py-2 text-left transition-colors hover:border-[color:var(--realm-border-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "realm-stat-pill flex min-h-11 flex-col justify-center gap-0.5 px-3 py-2.5 text-left transition-colors hover:border-[color:var(--realm-border-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 /** Trait cards linking back to the collection; Realm resources share one card with in-game icons. */
 export function TraitGrid({ attributes, rarity, collectionAddress }: TraitGridProps) {
@@ -93,11 +97,11 @@ export function TraitGrid({ attributes, rarity, collectionAddress }: TraitGridPr
       className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"
     >
       {resources.length > 0 ? (
-        <li className="realm-stat-pill col-span-2 px-3 py-2 sm:col-span-3 lg:col-span-4">
-          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+        <li className="col-span-2 pb-2 sm:col-span-3 lg:col-span-4">
+          <p className={traitNameClassName}>
             {resources[0].name}
           </p>
-          <ul aria-label="Resources" className="mt-1.5 flex flex-wrap gap-1.5">
+          <ul aria-label="Resources" className="mt-2 flex flex-wrap gap-2">
             {resources.map((attribute) => {
               const label = resolveResourceIcon(attribute.value)?.label ?? attribute.value;
               const share = rarity?.(attribute.name, attribute.value) ?? null;
@@ -108,7 +112,7 @@ export function TraitGrid({ attributes, rarity, collectionAddress }: TraitGridPr
                     className="inline-flex min-h-11 items-center gap-2 rounded-[6px] border border-[color:var(--realm-border-etched)] bg-[color:var(--realm-bg-void)]/60 px-2.5 py-1.5 text-sm transition-colors hover:border-[color:var(--realm-border-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <ResourceIcon name={attribute.value} size={20} decorative />
-                    <span className="flex flex-col leading-tight">
+                    <span className="flex flex-col gap-0.5 leading-tight">
                       <span className="font-medium text-foreground">{label}</span>
                       {share ? <ShareNote share={share.share} /> : null}
                     </span>
@@ -127,7 +131,7 @@ export function TraitGrid({ attributes, rarity, collectionAddress }: TraitGridPr
               href={traitFilterHref(collectionAddress, attribute.name, attribute.value)}
               className={linkClassName}
             >
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              <span className={`break-words ${traitNameClassName}`}>
                 {attribute.name}
               </span>
               <span className="break-words text-sm font-medium text-foreground">

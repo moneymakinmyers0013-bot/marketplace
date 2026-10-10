@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-10T09:40:28.151844+00:00",
+  "baselineCommit": "9008d74",
+  "candidateParentCommit": "5641044",
+  "candidateSourceSha256": "055a9fce76ca5e80ca1e2f0ad019ecef62bf7120b12395974ce30c6c682b553b",
+  "method": {
+    "build": "Next.js 16.3.8 production builds; same saved local SQLite demo fixture",
+    "runsPerRoute": 3,
+    "summary": "median",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "serverApiDelayMs": 300,
+    "browserApiDelayMs": 300,
+    "throttled": {
+      "cpuRate": 4,
+      "latencyMs": 150,
+      "downloadMbps": 9,
+      "uploadMbps": 1.5
+    },
+    "cache": "Server routes warmed; a new browser context for every sample. Not cold-server or production-network evidence.",
+    "readyDefinition": "Route marker exists with no visible skeleton or loading region; does not establish image decode completion or interactive/wallet readiness.",
+    "harnessSha256": "c12fb4efe9341922baf34aa8d7c5eb3401c50f3df71f61c894dc0aa401e40c4a",
+    "rawLocalEvidence": ".context/performance-implementation/{baseline,final}-{desktop,throttled}.json"
+  },
+  "results": [
+    {
+      "route": "home",
+      "desktopContentReadyMs": {
+        "before": 1197,
+        "after": 937
+      },
+      "throttledContentReadyMs": {
+        "before": 5263,
+        "after": 1404
+      },
+      "initialJavaScriptKiB": {
+        "before": 455.2,
+        "after": 387.8
+      },
+      "desktopImageTransferKiB": {
+        "before": 20556.9,
+        "after": 344
+      },
+      "desktopBrowserApiRequests": {
+        "before": 11,
+        "after": 2
+      }
+    },
+    {
+      "route": "collection",
+      "desktopContentReadyMs": {
+        "before": 649,
+        "after": 637
+      },
+      "throttledContentReadyMs": {
+        "before": 3416,
+        "after": 551
+      },
+      "initialJavaScriptKiB": {
+        "before": 488.2,
+        "after": 404.8
+      },
+      "desktopImageTransferKiB": {
+        "before": 729.9,
+        "after": 663
+      },
+      "desktopBrowserApiRequests": {
+        "before": 7,
+        "after": 3
+      }
+    },
+    {
+      "route": "token",
+      "desktopContentReadyMs": {
+        "before": 590,
+        "after": 638
+      },
+      "throttledContentReadyMs": {
+        "before": 3044,
+        "after": 1473
+      },
+      "initialJavaScriptKiB": {
+        "before": 475.6,
+        "after": 393.8
+      },
+      "desktopImageTransferKiB": {
+        "before": 370.8,
+        "after": 455.5
+      },
+      "desktopBrowserApiRequests": {
+        "before": 8,
+        "after": 4
+      }
+    }
+  ],
+  "validation": {
+    "combinedUnitAndStorybookTests": 891,
+    "nextBuild": "passed",
+    "storybookBuild": "passed",
+    "typecheck": "passed",
+    "lint": "zero errors; one existing unused-variable warning in .storybook/mocks/trade.ts",
+    "localNode": "22.23.1",
+    "requiredCiNode": "22.23.3"
+  },
+  "limits": [
+    "Only fixture browser workloads; no production latency, representative API load or real-wallet certification.",
+    "The restarted fixture API used the same saved database. The interrupted final run was discarded.",
+    "Public reads move to the server; browser API request counts are not total backend request counts.",
+    "Desktop collection readiness is effectively flat; token readiness increased by 48ms. No universal cold-load speedup or sub-200ms claim.",
+    "Real Controller reconnect/signing remains unverified; adapter events, lazy loading and retry behavior have unit coverage."
+  ]
+}

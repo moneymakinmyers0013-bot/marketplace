@@ -196,15 +196,13 @@ export function TraitFilterSidebar({
   }
 
   return (
-    <div className="realm-panel space-y-4 p-3">
+    <div className="realm-panel space-y-3 p-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex min-h-7 items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="realm-kicker text-sm">
-            Filters
-          </span>
+          <h2 className="market-section-title">Filters</h2>
           {activeCount > 0 && (
-            <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-[4px] bg-primary px-1 text-[10px] font-medium text-primary-foreground">
+            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-[4px] bg-primary px-1 text-xs font-medium tabular-nums text-primary-foreground">
               {activeCount}
             </span>
           )}
@@ -215,7 +213,7 @@ export function TraitFilterSidebar({
             size="sm"
             type="button"
             variant="ghost"
-            className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+            className="-mr-2 h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
           >
             Clear
           </Button>
@@ -230,7 +228,7 @@ export function TraitFilterSidebar({
       ) : null}
 
       {/* Trait groups — single-open accordion with per-group search */}
-      <div className="space-y-1">
+      <div className="-mx-2 space-y-0.5">
         {sortedTraitNames.map((trait, index) => {
           const traitName = trait.traitName;
           const traitPanelId = `trait-panel-${index}`;
@@ -246,7 +244,7 @@ export function TraitFilterSidebar({
                 aria-controls={traitPanelId}
                 aria-expanded={isOpen}
                 onClick={() => toggleTraitGroup(traitName)}
-                className="flex w-full items-center justify-between rounded-[6px] border border-transparent px-2 py-1.5 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground transition-all duration-150 hover:border-[color:var(--realm-border-etched)] hover:bg-muted/60 hover:text-foreground"
+                className="flex min-h-9 w-full items-center justify-between rounded-[6px] border border-transparent market-chip px-2 py-1.5 text-left text-muted-foreground transition-all duration-150 hover:border-[color:var(--realm-border-etched)] hover:bg-muted/60 hover:text-foreground"
               >
                 <span className="flex items-center gap-1.5">
                   {traitName}

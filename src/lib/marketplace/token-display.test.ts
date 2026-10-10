@@ -13,6 +13,7 @@ import {
   getTokenIconUrl,
   buildExplorerTxUrl,
   formatRelativeExpiry,
+  tokenIdCaption,
 } from "@/lib/marketplace/token-display";
 
 type MockToken = { token_id?: unknown; image?: string | null; metadata?: unknown };
@@ -590,5 +591,23 @@ describe("formatRelativeExpiry", () => {
   it("returns 'Expires soon' for < 1 hour future timestamps", () => {
     const future = Math.floor(Date.now() / 1000) + 300;
     expect(formatRelativeExpiry(future)).toBe("Expires soon");
+  });
+});
+
+describe("tokenIdCaption", () => {
+  it("omits the id when the name already ends with it", () => {
+    expect(tokenIdCaption("Realm #0", "0")).toBeNull();
+    expect(tokenIdCaption("Golden Token #1120", "1120")).toBeNull();
+    expect(tokenIdCaption("Beasts 42", "42")).toBeNull();
+  });
+
+  it("shows the id when the name does not end with it", () => {
+    expect(tokenIdCaption("Ember Drake", "7")).toBe("#7");
+    expect(tokenIdCaption("Token #10", "0")).toBe("#0");
+    expect(tokenIdCaption("Realm #12", "2")).toBe("#2");
+  });
+
+  it("shows the id when the name only contains it elsewhere", () => {
+    expect(tokenIdCaption("#7 Ember Drake", "7")).toBe("#7");
   });
 });

@@ -512,7 +512,7 @@ describe("collection route view", () => {
       />,
     );
 
-    expect(screen.getByAltText("Beasts banner")).toHaveAttribute("src", "/banners/beasts.jpg");
+    expect(screen.getByAltText("Beasts banner")).toHaveAttribute("src", "/optimized/banners/beasts-640.webp");
   });
 
   it("collection_route_sweep_adds_cheapest_candidates_and_resets_count", async () => {

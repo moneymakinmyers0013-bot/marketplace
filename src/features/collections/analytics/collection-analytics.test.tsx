@@ -95,7 +95,7 @@ describe("CollectionAnalytics", () => {
     await screen.findByText("60 STRK");
     await user.click(screen.getByRole("radio", { name: "Last 30 days" }));
     expect(await screen.findByText("30d gross, fees included")).toBeVisible();
-    expect(request).toHaveBeenCalledWith("/collections/0xabc/stats", { days: 30, currency: STRK });
+    expect(request).toHaveBeenCalledWith("/collections/0xabc/stats", { days: 30, currency: STRK }, undefined, expect.any(AbortSignal));
   });
 
   it("reports when statistics cannot be loaded", async () => {

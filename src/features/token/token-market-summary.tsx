@@ -1,9 +1,8 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import type { ReactNode } from "react";
-import { InfoTip } from "@/components/marketplace/info-tip";
 import { MarketPrice } from "@/components/marketplace/market-price";
+import { StatTile } from "@/components/marketplace/stat-tile";
 import type { MarketAmount } from "@/lib/marketplace/market-figures";
 
 export type { MarketAmount } from "@/lib/marketplace/market-figures";
@@ -30,39 +29,7 @@ const HELP = {
   lastSale: "The most recent sale of this token filled on this marketplace.",
 } as const;
 
-function Tile({
-  label,
-  help,
-  testId,
-  children,
-  note,
-}: {
-  label: string;
-  help: string;
-  testId: string;
-  children: ReactNode;
-  note?: ReactNode;
-}) {
-  return (
-    <div className="realm-stat-pill min-w-0 px-3 py-2.5">
-      <dt className="flex items-center gap-1 text-xs text-muted-foreground">
-        <span>{label}</span>
-        <InfoTip label={`About ${label.toLowerCase()}`} text={help} />
-      </dt>
-      <dd
-        data-testid={testId}
-        className="mt-1 min-w-0 text-lg font-semibold leading-tight text-primary"
-      >
-        {children}
-      </dd>
-      {note ? (
-        <dd className="mt-0.5 text-[11px] text-muted-foreground">{note}</dd>
-      ) : null}
-    </div>
-  );
-}
-
-/** Three at-a-glance market figures for one token. Tiles wrap on narrow screens. */
+/** Three at-a-glance market figures for one token. On phones the price leads on its own row. */
 export function TokenMarketSummary({
   price,
   currency,
@@ -76,12 +43,13 @@ export function TokenMarketSummary({
   return (
     <dl
       data-testid="token-market-summary"
-      className="grid grid-cols-[repeat(auto-fit,minmax(9.5rem,1fr))] gap-2"
+      className="grid grid-cols-2 gap-2 sm:grid-cols-3"
     >
-      <Tile
+      <StatTile
         label="Price"
         help={HELP.price}
-        testId="market-summary-price"
+        className="col-span-2 sm:col-span-1"
+        valueTestId="market-summary-price"
         note={
           listedCount !== undefined && listedCount > 1
             ? `${listedCount} open listings`
@@ -90,20 +58,20 @@ export function TokenMarketSummary({
       >
         {priceLoading ? (
           <span role="status" aria-label="Loading price">
-            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-7 w-24" />
           </span>
         ) : (
           <MarketPrice amount={price} currency={currency} empty="Not listed" />
         )}
-      </Tile>
-      <Tile
+      </StatTile>
+      <StatTile
         label="Top offer"
         help={HELP.topOffer}
-        testId="market-summary-top-offer"
+        valueTestId="market-summary-top-offer"
       >
         {offersLoading ? (
           <span role="status" aria-label="Loading top offer">
-            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-7 w-24" />
           </span>
         ) : (
           <MarketPrice
@@ -112,15 +80,15 @@ export function TokenMarketSummary({
             empty="No offers"
           />
         )}
-      </Tile>
-      <Tile
+      </StatTile>
+      <StatTile
         label="Last sale"
         help={HELP.lastSale}
-        testId="market-summary-last-sale"
+        valueTestId="market-summary-last-sale"
       >
         {activityLoading ? (
           <span role="status" aria-label="Loading last sale">
-            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-7 w-24" />
           </span>
         ) : (
           <MarketPrice
@@ -129,7 +97,7 @@ export function TokenMarketSummary({
             empty="No sales yet"
           />
         )}
-      </Tile>
+      </StatTile>
     </dl>
   );
 }

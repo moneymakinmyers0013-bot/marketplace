@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, within } from "storybook/test";
+import { expect, within, waitFor } from "storybook/test";
 import { TransactionFeedback } from "@/features/trading/transaction-feedback";
 import { CartSidebar } from "./cart-sidebar";
 import { useCartStore } from "../store/cart-store";
@@ -18,6 +18,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const ReadyToCheckout: Story = {};
+export const OpenWithKeyboard: Story = {
+  beforeEach() { useCartStore.setState({ isOpen: false }); },
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    const trigger = canvas.getByRole("button", { name: "Cart (1)" });
+    trigger.focus();
+    await userEvent.keyboard("{Enter}");
+    const body = within(canvasElement.ownerDocument.body);
+    await expect(await body.findByRole("button", { name: "Checkout" })).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveFocus());
+  },
+};
 export const Empty: Story = {
   beforeEach() {
     useCartStore.setState({ items: [] });

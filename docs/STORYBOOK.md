@@ -30,7 +30,7 @@ When a compatible Chromium is already installed locally, set `CHROMIUM_EXECUTABL
 
 ## Catalog
 
-- **Foundations:** current palette, surfaces, typography and dark/light review.
+- **Foundations:** current palette, surfaces, typography, the type hierarchy and dark/light review.
 - **UI:** button variants, disabled and keyboard states; form input/select/switch; confirmation-dialog focus and dismissal; tab navigation.
 - **Wallet:** disconnected/connected header, connect/disconnect, rejection, missing extension and pending approval.
 - **Marketplace UX:** responsive header, wallet entry points, currency-labelled prices, mobile filters, collapsible statistics, single purchase action, activity provenance, public status and wallet identity.
@@ -77,7 +77,7 @@ The signing mock records calls without contacting a wallet or chain. These stori
 ## Visual foundations
 
 - Production tokens and typography rules: `src/app/globals.css`.
-- Shared Next.js font loaders and semantic font bindings: `src/lib/fonts.ts` (used by the app layout and preview). Typography stories verify Exo 2, Geist Mono and the local display face.
+- Shared Next.js font loaders and semantic font bindings: `src/lib/fonts.ts` (used by the app layout and preview). Typography stories verify Exo 2, Monaspace Xenon and the local display face.
 - Current local imagery and logo: `public/`.
 - Storybook manager/docs chrome: `.storybook/theme.ts`.
 
@@ -91,6 +91,35 @@ Coverage combines unit and browser tests. The upgrade from Vitest 2 changed cove
 
 References: [Next.js/Vite framework](https://storybook.js.org/docs/get-started/frameworks/nextjs-vite), [Vitest integration](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon), [interaction testing](https://storybook.js.org/docs/writing-tests/interaction-testing).
 
+## Type hierarchy
+
+`Foundations/Hierarchy` is the reference. Each level has one class, defined in the
+components layer of `src/app/globals.css` so utilities can still adjust it:
+
+- `.market-page-title`: the route's single H1 (IM Fell, 30px, 36px from 640px).
+- `.market-section-title`: page sections and bordered panels (IM Fell brass, 18px).
+  Use `SectionHeader` for the title, optional count (`12` or `"12+"` while pages
+  remain), description and trailing action.
+- `.market-group-title`: titles inside a section, such as charts and form groups
+  (Exo 2 semibold, 14px).
+- `.market-label`: stat and field labels (Exo 2, 12px, muted, sentence case).
+
+Monaspace Xenon (`font-mono`) marks machine data: token ids, addresses, hashes and
+timestamps. `.market-chip` (11px uppercase Xenon) is the chip face: `Badge`, filter
+chips, counts, trait keys and segmented filters. Prices, labels, headings and body
+copy stay in Exo 2 and IM Fell, so figures keep their weight in the hierarchy.
+
+Bare `h1`–`h3` inherit IM Fell English SC, a small-caps face, so always give a
+heading one of these classes. Market figures use `StatTile` inside a `<dl>`
+(`compact` in banners); its label row has a fixed height so tiles with and without
+an explainer align. Segmented filters (period, event type, layout, chart/table,
+density) use `.market-segmented` and `.market-segment`, which style both Radix
+toggle items and `aria-pressed` buttons.
+
+Sections are 32px apart, headers sit 12–16px above their content, and panels use
+16px padding on phones and 20px from 640px. Controls sharing a toolbar row are 40px
+tall. Asset cards show the id line only when the name does not already end with it.
+
 ## Marketplace spacing
 
 Use `.market-page` for one page-level inset: 16px below 640px, 24px above.
@@ -98,7 +127,7 @@ Do not add a second page gutter inside a route wrapper. Collection banners bleed
 through that inset; their minimum height is 128px on mobile and 160px above 640px,
 and long titles can grow the banner rather than overlap its statistics.
 
-Use 16px between collection sections, 12px between assets, 12px for card text
+Use 32px between page sections, 12px between assets, 12px for card text
 insets and 8px for card action insets. `AssetGrid` sizes columns from available
 content width: 192px minimum in compact mode and 160px in dense mode, with two
 columns on phones. Keep media aspect ratios collection-specific. Asset action
@@ -108,6 +137,27 @@ buttons retain 44px touch targets and wrap when their labels need more room.
 the collection banner and filter layout, including long names, missing artwork
 and unlisted assets. The spacing pass checked 320, 390, 639, 640, 768, 1024,
 1279, 1280, 1440 and 1920px, including button clipping, focus and overflow.
+
+## Borders, surfaces and elevation
+
+`Foundations/Surfaces` composes the production card, panel, stat tile, trait links,
+input, buttons and dialog. Panels and asset cards use solid surfaces with one
+quiet brass hairline; stat tiles use a lighter inset edge. Resource links do not
+need an additional enclosing frame. Hover strengthens the asset-card edge without
+a glow. Primary buttons use solid brass, with their existing keyboard focus ring.
+
+Reserve shadows for floating dialogs, sheets, menus and tooltips. Use stronger
+edges there to separate them from content underneath. Artwork overlays retain
+their readability gradients; the page background has only a faint warm wash.
+Keep input boundaries and focus indicators distinct from decorative panel edges.
+Dark-theme error text uses a lighter red than destructive button fills so small
+error messages remain readable on solid surfaces.
+
+The surface story was visually checked at 320, 390, 639, 640, 768, 1024 and 1440px;
+asset-layout stories at 390, 768 and 1440px. Keyboard review covers input → action,
+Enter to open the dialog, Escape to dismiss and restored trigger focus. Existing
+stories cover loading, empty, error, wallet and transaction states; these remain
+simulated and do not establish real-wallet acceptance.
 
 ## Collection discovery without a navigation rail
 
@@ -166,7 +216,7 @@ minimum seller proceeds. `CreatorRoyalty` and `CreatorRoyaltyMobile` cover a 5%
 ceiling and exact calldata. Mixed selections conservatively use the highest
 reviewed ceiling. Layouts were checked at 390, 768 and 1440px.
 
-Exo 2 and Geist Mono are bundled under `public/brand/fonts` with their OFL licenses.
+Exo 2 and Monaspace Xenon are bundled under `public/brand/fonts` with their OFL licenses.
 This removes the Google font-service dependency from production builds. The preview
 uses the same font files through public URLs because its local-font adapter emits
 invalid unquoted filesystem URLs when the workspace path contains spaces. Font
@@ -320,3 +370,39 @@ reads against HTTP fixtures to check query isolation, cursor reset, address
 validation and expired-generation recovery. App browser checks use fixture HTTP
 responses; they do not establish production indexing completeness or settlement
 eligibility.
+
+## Responsive local artwork
+
+`Marketplace/Artwork loading/ResponsiveArtwork`, `PriorityArtwork` and `Banners`
+exercise bundled WebP variants with the production image components. External
+URLs retain their existing fallback behavior. `pnpm images:build` regenerates
+reviewed derivatives from the original files using pinned development-only sharp.
+Thumbnail `sizes` are 40px, spotlight 320px, cards use viewport-based widths, and
+hero banners use 100vw with eager/high priority. Browsers may reuse a larger cached
+variant rather than download a smaller one.
+
+`Marketplace/Collection stats/Prefetched` exercises the same hydrated public query
+cache used by the collection route. It renders populated figures without initial
+loading regions; existing loading, empty and error stories remain applicable.
+Prefetched stats and the filtered fixture collection were reviewed at
+390/768/1440px. Query hydration tests cover independent currency, filter, cursor
+and deployment identities plus cancellation of slow reads.
+
+`Marketplace/Public page data/PrefetchedHome` and `Mobile` use the same home
+prefetch adapter as server delivery. Primary and secondary data use one query
+identity; the streaming unit test holds secondary data open while primary data
+remains available. Home and token fixture layouts were checked at
+390/768/1440px. The token holder check and wallet/authentication reads remain live.
+
+`Trading/Cart/OpenWithKeyboard` verifies deferred checkout content, Enter to open,
+Escape to close and restored trigger focus. Existing cart stories still cover
+empty, wallet-required, rejected, unavailable and accepted states. Cart layouts
+were reviewed at 390/768/1440px. Home/collection entrance fades were removed so
+SSR content stays visible. The streamed-hydration regression test covers a query
+resolving before the browser's first render, without a duplicate browser fetch.
+
+`Marketplace/Intent navigation/Keyboard` checks the same link used by collection
+and token entry points. Its unit tests verify delayed/cancelled hover, immediate
+focus, network preference handling and bounded admission. The link was checked
+at 390/768/1440px. Full-route prefetch carries public query state; the link never
+prepares trading calls or authenticates a wallet.

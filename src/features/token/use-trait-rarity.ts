@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { marketplaceRequest } from "@/lib/marketplace/api-client";
+import { collectionSummaryOptions, traitFacetsOptions } from "@/lib/marketplace/public-queries";
 import type { ApiCollection } from "@/lib/marketplace/types";
 
 /** One entry of `GET /collections/{address}/traits`. Counts arrive as strings. */
@@ -68,18 +68,8 @@ function parseTokenCount(collection: ApiCollection | undefined) {
  * collection size are fetched once per collection and reused for 5 minutes.
  */
 export function useTraitRarity(address: string): TraitRarityLookup {
-  const facets = useQuery({
-    queryKey: ["owned", "trait-facets", address],
-    queryFn: () => marketplaceRequest<TraitFacet[]>(`/collections/${address}/traits`),
-    enabled: !!address,
-    staleTime: TRAIT_RARITY_STALE_TIME_MS,
-  });
-  const collection = useQuery({
-    queryKey: ["owned", "collection-summary", address],
-    queryFn: () => marketplaceRequest<ApiCollection>(`/collections/${address}`),
-    enabled: !!address,
-    staleTime: TRAIT_RARITY_STALE_TIME_MS,
-  });
+  const facets = useQuery({ ...traitFacetsOptions(address), enabled: !!address });
+  const collection = useQuery({ ...collectionSummaryOptions(address), enabled: !!address });
 
   const facetData = facets.data;
   const tokenCount = parseTokenCount(collection.data);

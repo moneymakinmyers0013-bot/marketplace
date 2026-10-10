@@ -1,10 +1,10 @@
 "use client";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { AssetGrid } from "@/components/marketplace/asset-grid";
 import { useMarketCurrency } from "@/lib/marketplace/currency-store";
-import { decodeRangeFilterValue } from "@/lib/marketplace/traits";
+import { apiFiltersFromActiveFilters } from "@/lib/marketplace/browse-filters";
 import { useEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
 import type { NormalizedToken } from "@/lib/marketplace/types";
 import {
@@ -45,7 +45,6 @@ import {
 import { COLLECTION_LISTING_SAMPLE_LIMIT } from "@/lib/marketplace/query-limits";
 import { realmResources } from "@/lib/marketplace/token-attributes";
 import { cn } from "@/lib/utils";
-import { useEntrance } from "@/lib/animation";
 import {
   cartItemFromTokenListing,
   cheapestListingByTokenId,
@@ -57,6 +56,7 @@ import { getMarketplaceRuntimeConfig } from "@/lib/marketplace/config";
 type CollectionTokenGridProps = {
   address: string;
   projectId?: string;
+  cursor?: string | null;
   limit?: number;
   tokenIds?: string[];
   activeFilters?: ActiveFilters;
@@ -78,6 +78,7 @@ type CollectionTokenGridProps = {
 export type GridLayoutMode = "compact" | "dense" | "list";
 
 const EMPTY_ACTIVE_FILTERS: ActiveFilters = {};
+const EMPTY_TOKENS: NormalizedToken[] = [];
 
 function dedupeTokens(tokens: NormalizedToken[]) {
   const unique = new Map<string, NormalizedToken>();
@@ -191,7 +192,7 @@ type GridPaginationState = {
 };
 
 type GridPaginationAction =
-  | { type: "RESET" }
+  | { type: "RESET"; cursor?: string }
   | { type: "APPEND_PAGE"; pageTokens: NormalizedToken[] }
   | { type: "ADVANCE_CURSOR"; cursor: string };
 
@@ -201,7 +202,7 @@ function gridPaginationReducer(
 ): GridPaginationState {
   switch (action.type) {
     case "RESET":
-      return { cursor: undefined, tokens: [] };
+      return { cursor: action.cursor, tokens: [] };
     case "APPEND_PAGE": {
       const next = !state.cursor
         ? dedupeTokens(action.pageTokens)
@@ -220,6 +221,7 @@ function gridPaginationReducer(
 export function CollectionTokenGrid({
   address,
   projectId,
+  cursor: initialCursor,
   limit = 24,
   tokenIds,
   activeFilters,
@@ -258,7 +260,7 @@ export function CollectionTokenGrid({
     [activeFilters],
   );
   const [pagination, dispatch] = useReducer(gridPaginationReducer, {
-    cursor: undefined,
+    cursor: initialCursor ?? undefined,
     tokens: [],
   });
 
@@ -274,23 +276,7 @@ export function CollectionTokenGrid({
     currency,
     q: query || undefined,
     listedOnly,
-    filters: Object.entries(activeFilters ?? {}).map(([name, values]) => {
-      const range = [...values].map(decodeRangeFilterValue).find(Boolean);
-      return range
-        ? { name, ...range }
-        : {
-            name,
-            values: [...values].map((v) =>
-              v === "true"
-                ? true
-                : v === "false"
-                  ? false
-                  : /^\d+$/.test(v) && Number.isSafeInteger(Number(v))
-                    ? Number(v)
-                    : v,
-            ),
-          };
-    }),
+    filters: apiFiltersFromActiveFilters(activeFilters ?? {}),
   });
   const listingQuery = useCollectionListingsQuery({
     collection: address,
@@ -306,8 +292,9 @@ export function CollectionTokenGrid({
   });
 
   useEffect(() => {
-    dispatch({ type: "RESET" });
+    dispatch({ type: "RESET", cursor: initialCursor ?? undefined });
   }, [
+    initialCursor,
     address,
     projectId,
     limit,
@@ -325,9 +312,13 @@ export function CollectionTokenGrid({
     dispatch({ type: "APPEND_PAGE", pageTokens });
   }, [tokenQuery.data, tokenQuery.isSuccess]);
 
+  // A hydrated first page must render before effects run (including on the server).
+  const visibleTokens = pagination.cursor === (initialCursor ?? undefined)
+    ? tokenQuery.data?.page?.tokens ?? EMPTY_TOKENS
+    : pagination.tokens;
   const listingPrices = cheapestListingByTokenId([
     ...(listingQuery.data ?? []),
-    ...pagination.tokens.flatMap((t) =>
+    ...visibleTokens.flatMap((t) =>
       t.best_listing ? [t.best_listing] : [],
     ),
   ]);
@@ -352,7 +343,6 @@ export function CollectionTokenGrid({
     onCanLoadMoreChangeRef.current?.(canLoadMore);
   }, [canLoadMore]);
   // The API applies sorting and filters across the full collection before pagination.
-  const visibleTokens = pagination.tokens;
   const filteredVisibleTokens = useMemo(
     () =>
       filterTokensByActiveFilters(
@@ -388,12 +378,7 @@ export function CollectionTokenGrid({
 
   // Grid entrance stagger animation — re-triggers on filter/sort changes via key
   const gridAnimationKey = `${activeFiltersKey}-${sortMode}-${gridMode}`;
-  const gridRef = useEntrance<HTMLDivElement>({
-    selector: "[data-token-card]",
-    staggerDelay: 30,
-    translateY: 12,
-    threshold: 0.05,
-  });
+
 
   return (
     <section className="space-y-4" data-testid="collection-token-grid">
@@ -424,8 +409,7 @@ export function CollectionTokenGrid({
 
       {!tokenQuery.isLoading && !isListMode ? (
         <AssetGrid
-          ref={gridRef}
-          key={gridAnimationKey}
+                    key={gridAnimationKey}
           density={density}
           data-testid="collection-token-grid-cards"
         >

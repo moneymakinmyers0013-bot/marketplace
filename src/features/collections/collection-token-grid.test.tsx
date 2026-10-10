@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CollectionTokenGrid } from "@/features/collections/collection-token-grid";
@@ -57,6 +58,15 @@ describe("collection token grid", () => {
     mockCartSetOpen.mockReset();
     mockCartAddItem.mockReturnValue({ ok: true });
     mockUseCollectionListingsQuery.mockReturnValue(successListingsResult([]));
+  });
+
+  it("includes prefetched assets in server HTML before effects run", () => {
+    mockUseCollectionTokensQuery.mockReturnValue({
+      data: { page: { tokens: [token("9007199254740993")], nextCursor: null }, error: null },
+      isLoading: false, isSuccess: true, isError: false, isFetching: false,
+    });
+    const html = renderToString(<CollectionTokenGrid address="0xabc" />);
+    expect(html).toContain("Token #9007199254740993");
   });
 
   it("token_grid_renders_first_page_with_skeleton_then_data", async () => {
@@ -444,7 +454,10 @@ describe("collection token grid", () => {
 
     render(<CollectionTokenGrid address="0xabc" projectId="project-a" />);
 
-    expect(await screen.findByText("#1120")).toBeVisible();
+    // The name already ends with the decimal id, so the card omits a repeated "#1120" line;
+    // the hex id is still formatted for the card body label below.
+    expect(await screen.findByText("Golden Token #1120")).toBeVisible();
+    expect(screen.queryByText("#1120")).toBeNull();
     expect(screen.getByText("77")).toBeVisible();
 
     const tokenCardBody = screen.getByRole("article", { name: "token-1120" });

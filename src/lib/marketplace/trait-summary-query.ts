@@ -1,3 +1,4 @@
+import { publicQueryKey } from "./public-query-key";
 import { queryOptions } from "@tanstack/react-query";
 import {
   aggregateTraitSummaryPages,
@@ -12,17 +13,16 @@ export type TraitNamesSummaryQueryInput = {
 };
 
 export function traitNamesSummaryQueryKey(options: TraitNamesSummaryQueryInput) {
-  return ["trait-names-summary", options.address, options.projectId] as const;
+  return publicQueryKey(["trait-names-summary", options.address, options.projectId]);
 }
 
 export async function fetchTraitNamesSummaryAggregate(
   options: TraitNamesSummaryQueryInput,
+  signal?: AbortSignal,
 ): Promise<TraitNameSummary[]> {
   const { fetchTraitNamesSummary } = await import("@/lib/marketplace/api-client");
-  const result = await fetchTraitNamesSummary({
-    address: options.address,
-    defaultProjectId: options.projectId,
-  });
+  const input = { address: options.address, defaultProjectId: options.projectId };
+  const result = await (signal ? fetchTraitNamesSummary(input, signal) : fetchTraitNamesSummary(input));
 
   return aggregateTraitSummaryPages(result.pages);
 }
@@ -30,7 +30,8 @@ export async function fetchTraitNamesSummaryAggregate(
 export function traitNamesSummaryQueryOptions(options: TraitNamesSummaryQueryInput) {
   return queryOptions({
     queryKey: traitNamesSummaryQueryKey(options),
-    queryFn: () => fetchTraitNamesSummaryAggregate(options),
+    queryFn: ({ signal }) => fetchTraitNamesSummaryAggregate(options, signal),
+    retry: false,
     staleTime: TRAIT_SUMMARY_STALE_TIME_MS,
   });
 }

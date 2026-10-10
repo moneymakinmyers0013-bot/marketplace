@@ -2,7 +2,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useRouter } from "next/navigation";
 import { useQueries } from "@tanstack/react-query";
 import { ArrowDown, ArrowUp, ArrowUpDown, BadgeCheck } from "lucide-react";
@@ -10,8 +10,7 @@ import { TokenMedia } from "@/components/marketplace/token-media";
 import { TokenSymbol } from "@/components/ui/token-symbol";
 import { InfoTip } from "@/components/marketplace/info-tip";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
-import { marketplaceRequest } from "@/lib/marketplace/api-client";
-import type { CollectionStats } from "@/lib/marketplace/market-data";
+import { collectionStatsOptions } from "@/lib/marketplace/public-queries";
 import { sameCurrency } from "@/lib/marketplace/currency-store";
 import type { CollectionCardData } from "./types";
 import { cn } from "@/lib/utils";
@@ -77,15 +76,7 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
   const router = useRouter();
   const [sort, setSort] = useState<SortState>({ key: "rank", direction: "asc" });
   const statsQueries = useQueries({
-    queries: collections.map((collection) => ({
-      queryKey: ["owned", "stats", collection.address, 7, currency],
-      queryFn: () =>
-        marketplaceRequest<CollectionStats>(`/collections/${collection.address}/stats`, {
-          days: 7,
-          currency,
-        }),
-      staleTime: 30_000,
-    })),
+    queries: collections.map(collection => collectionStatsOptions(collection.address, 7, currency)),
   });
   const statsByAddress = useMemo(() => {
     const map = new Map<string, { volume: bigint | null; sales: number; pending: boolean }>();
@@ -149,9 +140,19 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
                   key={column.key}
                   scope="col"
                   aria-sort={active ? (sort.direction === "asc" ? "ascending" : "descending") : "none"}
-                  className={cn("px-3 py-1.5 font-medium", column.align === "right" && "text-right", column.className)}
+                  className={cn(
+                    "whitespace-nowrap px-2 py-1.5 sm:px-3 font-medium",
+                    column.align === "right" ? "text-right" : "text-left",
+                    column.className,
+                  )}
                 >
-                  <span className={cn("inline-flex items-center gap-0.5", column.align === "right" && "justify-end")}>
+                  {/* Offset the button's own padding so the label lines up with the cell content below. */}
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-0.5",
+                      column.align === "right" ? "-mr-1 justify-end" : "-ml-1",
+                    )}
+                  >
                     <button
                       type="button"
                       onClick={() => toggleSort(column.key)}
@@ -177,13 +178,13 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
           {isLoading
             ? Array.from({ length: 5 }).map((_, index) => (
                 <tr key={index} className="border-b border-[color:var(--realm-border-etched)]/60 last:border-b-0">
-                  <td className="px-3 py-3">
+                  <td className="w-full max-w-0 px-2 py-3 sm:px-3">
                     <div className="flex items-center gap-3">
-                      <Skeleton className="size-11 shrink-0" />
+                      <Skeleton className="size-9 shrink-0 sm:size-11" />
                       <Skeleton className="h-4 w-16 sm:w-40" />
                     </div>
                   </td>
-                  {COLUMNS.slice(1).map(column => <td key={column.key} className={cn("px-3 py-3", column.className)}><Skeleton className="ml-auto h-4 w-10 sm:w-16" /></td>)}
+                  {COLUMNS.slice(1).map(column => <td key={column.key} className={cn("px-2 py-3 sm:px-3", column.className)}><Skeleton className="ml-auto h-4 w-10 sm:w-16" /></td>)}
                 </tr>
               ))
             : rows.map(({ collection, index }) => {
@@ -199,11 +200,13 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
                     onClick={() => router.push(href)}
                     className="group cursor-pointer border-b border-[color:var(--realm-border-etched)]/60 transition-colors last:border-b-0 hover:bg-primary/5 has-[a:focus-visible]:bg-primary/5"
                   >
-                    <td className="px-3 py-2.5">
-                      <div className="flex items-center gap-3">
-                        <span className="w-5 text-right text-xs tabular-nums text-muted-foreground">{index + 1}</span>
-                        <span className="size-11 shrink-0 overflow-hidden rounded-md border border-[color:var(--realm-border-etched)] bg-muted">
-                          <TokenMedia alt="" sources={collection.imageUrl ? [collection.imageUrl] : []} fallbackLabel="" />
+                    <td className="w-full max-w-0 px-2 py-2.5 sm:px-3">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className="hidden w-5 shrink-0 text-right text-xs tabular-nums text-muted-foreground sm:inline">
+                          {index + 1}
+                        </span>
+                        <span className="size-9 shrink-0 overflow-hidden sm:size-11 rounded-md border border-[color:var(--realm-border-etched)] bg-muted">
+                          <TokenMedia alt="" sources={collection.imageUrl ? [collection.imageUrl] : []} sizes="40px" fallbackLabel="" />
                         </span>
                         <Link
                           href={href}
@@ -216,17 +219,21 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
                         </Link>
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 text-right tabular-nums">
+                    <td className="whitespace-nowrap px-2 py-2.5 sm:px-3 text-right tabular-nums">
                       {collection.floorPrice ? (
                         <span className="inline-flex items-center gap-1 font-medium">
                           {collection.floorPrice}
-                          <TokenSymbol address={currency} className="text-muted-foreground" />
+                          {/* Phones show the currency icon only; the symbol stays available to screen readers. */}
+                          <TokenSymbol
+                            address={currency}
+                            className="text-muted-foreground [&>span:last-child]:sr-only sm:[&>span:last-child]:not-sr-only"
+                          />
                         </span>
                       ) : (
                         <span className="text-muted-foreground">—</span>
                       )}
                     </td>
-                    <td className="hidden px-3 py-2.5 text-right tabular-nums md:table-cell">
+                    <td className="hidden whitespace-nowrap px-2 py-2.5 sm:px-3 text-right tabular-nums md:table-cell">
                       {stats?.pending ? (
                         <span role="status" aria-label="Loading volume"><Skeleton className="ml-auto h-4 w-16" /></span>
                       ) : stats?.volume ? (
@@ -243,11 +250,11 @@ export function CollectionsTable({ collections, currency, isLoading = false }: C
                         <span className="text-muted-foreground">No sales</span>
                       )}
                     </td>
-                    <td className="px-3 py-2.5 text-right tabular-nums">
+                    <td className="whitespace-nowrap px-2 py-2.5 sm:px-3 text-right tabular-nums">
                       {listed === null ? "—" : listed}
-                      {share ? <span className="text-muted-foreground"> ({share})</span> : null}
+                      {share ? <span className="hidden text-muted-foreground sm:inline"> ({share})</span> : null}
                     </td>
-                    <td className="hidden px-3 py-2.5 text-right tabular-nums sm:table-cell">{items ?? "—"}</td>
+                    <td className="hidden px-2 py-2.5 sm:px-3 text-right tabular-nums sm:table-cell">{items ?? "—"}</td>
                   </tr>
                 );
               })}

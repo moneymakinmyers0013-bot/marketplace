@@ -191,7 +191,7 @@ describe("collection activity feed", () => {
       type: undefined,
       limit: 30,
       cursor: undefined,
-    });
+    }, undefined, expect.any(AbortSignal));
     expect(screen.getByRole("group", { name: "Activity type" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
 
@@ -273,7 +273,7 @@ describe("collection activity feed", () => {
         type: undefined,
         limit: 30,
         cursor: "cursor-2",
-      }),
+      }, undefined, expect.any(AbortSignal)),
     );
     expect(screen.getByRole("button", { name: /loading more/i })).toBeDisabled();
 

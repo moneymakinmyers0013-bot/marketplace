@@ -11,7 +11,7 @@ beforeEach(()=>{request.mockReset();});
 it('uses indexed collection totals and only the selected currency floor',async()=>{
  request.mockResolvedValue([{address:'0xa',name:'Realms',tokenCount:'9001',listingCount:'203',floorByCurrency:[{currency:'0x2',price:'1'},{currency:'0x1',price:'2000000000000000000'}]}]);
  const {result}=renderHook(useHomePageData,{wrapper});await waitFor(()=>expect(result.current.isLoading).toBe(false));
- expect(request).toHaveBeenCalledWith('/collections');
+ expect(request).toHaveBeenCalledWith('/collections', {}, undefined, expect.any(AbortSignal));
  expect(result.current.collectionCards[0]).toMatchObject({name:'Realms',totalSupply:'9001',listingCount:'203',floorPrice:'2'});
  expect(result.current.trendingTokens).toEqual([]);
 });

@@ -36,7 +36,7 @@ export function ActiveFilterChips({ activeFilters, onRemove, onClear }: ActiveFi
                 type="button"
                 onClick={() => onRemove(selection.name, selection.value)}
                 aria-label={`Remove filter ${label}`}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 pl-2.5 pr-1.5 text-xs text-foreground transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="market-chip inline-flex h-8 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 pl-2.5 pr-1.5 text-foreground transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {showIcon ? <ResourceIcon name={selection.value} size={14} decorative /> : null}
                 {label}

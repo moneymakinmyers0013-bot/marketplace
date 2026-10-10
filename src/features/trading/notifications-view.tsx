@@ -1,7 +1,7 @@
 "use client";
 import { ListSkeleton } from "@/components/marketplace/loading-state";
 import { WalletConnectButton } from "@/components/layout/wallet-connect-button";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWalletSession } from "@/lib/marketplace/use-wallet-session";
@@ -46,11 +46,13 @@ export function NotificationsView() {
     }
   }
   return (
-    <main className="mx-auto max-w-3xl space-y-5 p-4 sm:p-8">
-      <h1 className="realm-title text-3xl">Notifications</h1>
-      <p className="text-sm text-muted-foreground">
-        Offers and trades for your verified wallet.
-      </p>
+    <main className="market-page mx-auto w-full max-w-3xl space-y-6">
+      <div className="space-y-2">
+        <h1 className="market-page-title">Notifications</h1>
+        <p className="text-sm text-muted-foreground">
+          Offers and trades for your verified wallet.
+        </p>
+      </div>
       {markError && (
         <p role="alert" className="text-sm text-destructive">
           {markError}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { collectionTokensOptions } from "./public-queries";
 import type {
   CollectionListingsOptions,
   CollectionOrdersOptions,
@@ -60,28 +61,9 @@ export function useCollectionTokensQuery(
 ) {
   const enabled = (queryOptions?.enabled ?? true) && !!options.address;
   return useQuery({
-    queryKey: [
-      "collection-tokens",
-      options.address,
-      options.project,
-      options.cursor,
-      options.tokenIds,
-      options.attributeFilters,
-      options.filters,
-      options.limit,
-      options.sort,
-      options.currency,
-      options.q,
-      options.listedOnly,
-    ] as const,
-    queryFn: async () => {
-      const { fetchCollectionTokens } = await import(
-        "@/lib/marketplace/api-client"
-      );
-      return fetchCollectionTokens(options);
-    },
+    ...collectionTokensOptions(options),
     enabled,
-    staleTime: queryOptions?.staleTime,
+    staleTime: queryOptions?.staleTime ?? 15_000,
   });
 }
 

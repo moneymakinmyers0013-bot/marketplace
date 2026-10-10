@@ -1,4 +1,6 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { collectionSummaryOptions, collectionListingsOptions, tokenDetailsOptions } from "./public-queries";
 import { configureCurrencyDecimals } from "./amount-display";
 import { useClientQuery } from "@biblio/marketplace-react";
 import {getAppMarketplaceClient} from "./app-client";
@@ -7,8 +9,8 @@ import {
   fetchCollectionTokens,
   fetchTokenBalances,
   ownedClient,
-  marketplaceRequest,
 } from "./api-client";
+import { marketplaceRequest } from "@/lib/marketplace/api-client";
 import type {
   CollectionOrdersOptions,
   CollectionSummaryOptions,
@@ -31,9 +33,9 @@ export function useMarketplaceCollection(
   o: CollectionSummaryOptions,
   q: Options = {},
 ) {
-  return useClientQuery(getAppMarketplaceClient(),{
-    queryKey: ["owned", "collection", o],
-    queryFn: () => ownedClient.getCollection(o),
+  return useQuery({
+    ...collectionSummaryOptions(o.address),
+    select: (c) => ({ ...c, metadata: { name: c.name, description: c.description, image: c.image }, totalSupply: c.tokenCount }),
     enabled: !!o.address && q.enabled !== false,
   });
 }
@@ -54,9 +56,8 @@ export function useMarketplaceCollectionListings(
 ) {
   const currency = useMarketCurrency((s) => s.currency);
   const options = { ...o, currency: o.currency ?? currency };
-  return useClientQuery(getAppMarketplaceClient(),{
-    queryKey: ["owned", "listings", options],
-    queryFn: () => ownedClient.listCollectionListings(options),
+  return useQuery({
+    ...collectionListingsOptions(options),
     enabled: !!o.collection && q.enabled !== false,
   });
 }
@@ -71,9 +72,8 @@ export function useMarketplaceCollectionOrders(
   });
 }
 export function useMarketplaceToken(o: TokenDetailsOptions, q: Options = {}) {
-  return useClientQuery(getAppMarketplaceClient(),{
-    queryKey: ["owned", "token", o],
-    queryFn: () => ownedClient.getToken(o),
+  return useQuery({
+    ...tokenDetailsOptions(o),
     enabled: !!o.collection && q.enabled !== false,
   });
 }

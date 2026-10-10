@@ -25,14 +25,12 @@ describe("starknet config", () => {
   it("maps SN_MAIN chain label to owned RPC mainnet defaults", () => {
     const config = buildStarknetConfig("SN_MAIN");
 
-    expect(mockControllerConnectorOptions).toHaveBeenCalledWith(
-      expect.objectContaining({ defaultChainId: "0x534e5f4d41494e" }),
-    );
+    expect(mockControllerConnectorOptions).not.toHaveBeenCalled();
     expect(config.chains).toEqual([mainnet]);
     expect(config.defaultChainId).toBe(mainnet.id);
     expect(config.provider).toBeTypeOf("function");
     expect(config.connectors).toHaveLength(3);
-    expect(config.connectors[0]).toBeInstanceOf(MockControllerConnector);
+    expect(config.connectors[0].id).toBe("controller");
     expect(config.explorer).toBeTypeOf("function");
     const mainnetProvider = config.provider(mainnet);
     const sepoliaProvider = config.provider(sepolia);

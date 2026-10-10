@@ -427,6 +427,77 @@ results are recorded below; earlier counts and individual implementation reports
 are [historical evidence](history/IMPLEMENTATION-EVIDENCE-2026-10-07.md), not current
 release approval. Demo screenshots and local fixtures do not close launch gates.
 
+### UI hierarchy and surface polish — 10 October 2026
+
+Implemented locally: shared heading/stat/section hierarchy, Monaspace Xenon for
+machine data and chips, solid panel surfaces, quieter border hierarchy and
+floating-layer elevation. Artwork readability overlays remain. Surface changes
+also correct small error-text contrast and the light-review heading contrast.
+See [Storybook](STORYBOOK.md#borders-surfaces-and-elevation) for the component
+reference and review coverage. Local checks pass: 669 unit tests, 196 Storybook
+interaction/accessibility tests, typecheck and both production builds. Lint has
+one existing unused-variable warning in the Storybook trade mock. Checks used
+Node 22.23.1 locally; CI's required 22.23.3 remains a separate verification.
+Fixture home, collection and token layouts were reviewed at 390/768/1440px;
+wallet states remain story simulations. No deployment or real-wallet acceptance
+is claimed. The original experiments remain under ignored `.context/perf/`; the reviewed
+implementation and measured limits are tracked below. No launch latency gate is
+marked passed.
+
+### Page-delivery performance — 10 October 2026
+
+Implemented locally in the user-authorized priority order, with separate commits:
+
+1. Responsive WebP variants for seven bundled collection images, accurate card/
+   thumbnail sizes, and eager/high-priority heroes. `pnpm images:build` uses pinned
+   development-only sharp 0.35.5. Backend media processing and external NFT URLs
+   retain their existing behavior.
+2. Request-local collection prefetching with shared deployment-aware query keys,
+   URL filters/sort/cursor, a 1.5-second cancellation budget and server-rendered
+   assets. Currency and deployment changes cannot reuse a mismatched snapshot.
+3. Home and token public reads use shared query definitions. Primary content has
+   a bounded prefetch; secondary results stream through query promises using the
+   SDK's existing read timeout. Independent token reads start in parallel. Home
+   search skips unrelated catalog prefetch. Configuration/authentication and token
+   holder checks remain live. No authenticated state is shared-cached.
+4. Controller loads only for connection or remembered-session readiness. Checkout
+   content loads inside the opened cart sheet, with keyboard focus restoration.
+   Entrance fades no longer hide delivered content. A production hydration race
+   was reproduced and fixed: pending streamed data attaches after matching the
+   initial markup, with observers held until their promises are installed.
+5. Public collection/token links prepare full routes on deliberate hover, focus
+   or touch instead of viewport visibility. The route includes its query state;
+   there is no parallel browser API prefetch fan-out. Admission allows two new
+   destinations per second with bounded 30-second deduplication, and respects
+   data-saver/2G settings. Trait, activity, offer and cart links use the same rule.
+
+Local validation: **891 combined unit/Storybook interaction/accessibility tests**,
+Next.js and Storybook builds, typecheck and diff checks pass. Lint has one existing
+Storybook mock warning. Checks used Node 22.23.1; CI's 22.23.3 remains separate.
+Stories and fixture home/collection/token/cart layouts were checked at
+390/768/1440px, with artwork also around the 640px breakpoint. Browser checks cover
+hover prefetch, navigation, keyboard activation, drawer dismissal and restored
+focus. Deferred connector event/retry tests are simulated, not real-wallet checks.
+
+[Measurement evidence](evidence/page-delivery-2026-10-10.json): three-run medians,
+production builds against the same saved fixture, warmed server routes, fresh
+browser contexts, synthetic API delay. Throttling uses 4× CPU and 9Mbps/150ms
+network settings at a desktop viewport. “Content ready” is the harness's DOM/
+loading-region check; it does not certify complete artwork or interactive wallets.
+
+| Route | Desktop before → after | Throttled before → after |
+| --- | --- | --- |
+| Home | 1197 → 937 ms | 5263 → 1404 ms |
+| Collection | 649 → 637 ms | 3416 → 551 ms |
+| Token | 590 → 638 ms | 3044 → 1473 ms |
+
+Initial JS transfer fell roughly 15–17%. The desktop fixture home's measured image
+transfer fell from about 20MiB to 344KiB. Desktop collection readiness is effectively
+flat and token readiness is 48ms slower; no universal cold-load speedup is claimed.
+A separate local hover/navigation check opened collection assets in 116ms after
+prefetch, not a production SLA. Production load/latency and supported-wallet
+reconnect/signing remain open; these measurements do not close launch gates.
+
 ### Release preparation — 7 October 2026
 
 - Local settings remain on disk but `.env.local` is removed from source control;

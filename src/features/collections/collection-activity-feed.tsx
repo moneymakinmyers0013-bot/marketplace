@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import {
   Activity,
   ArrowRight,
@@ -77,10 +77,13 @@ const FILTERS: Array<{
   },
 ];
 
+/** One etched track, the active segment filled; see `.market-segmented` in globals.css. */
+const SEGMENT_CLASS =
+  "market-segment h-9 min-w-11 px-2 sm:px-3";
 const LINK_CLASS =
   "inline-flex min-h-11 items-center rounded text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-primary";
 const ADDRESS_CLASS =
-  "inline-flex min-h-11 items-center rounded font-mono text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-primary";
+  "inline-flex min-h-11 items-center rounded font-mono text-xs text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-primary";
 
 /** A shared reference time for relative labels, refreshed once a minute so rows age consistently. */
 function useNow(tickMs = CLOCK_TICK_MS) {
@@ -135,7 +138,7 @@ function isZeroAddress(address: string) {
 function EventBadge({ event }: { event: ActivityEvent }) {
   const { label, Icon } = describeEvent(event);
   return (
-    <Badge variant="outline" className="gap-1.5 font-normal">
+    <Badge variant="outline" className="gap-1.5">
       <Icon aria-hidden className="size-3" />
       {label}
     </Badge>
@@ -147,7 +150,7 @@ function ItemLink({ address, tokenId }: { address: string; tokenId?: string | nu
     return <span className="text-muted-foreground">Collection offer</span>;
   }
   return (
-    <Link className={`${LINK_CLASS} tabular-nums`} href={`/collections/${address}/${tokenId}`}>
+    <Link className={`${LINK_CLASS} font-mono`} href={`/collections/${address}/${tokenId}`}>
       #{tokenId}
     </Link>
   );
@@ -187,7 +190,7 @@ function Participants({ event }: { event: ActivityEvent }) {
 function EventTime({ timestamp, now }: { timestamp: number; now: number }) {
   return (
     <time
-      className="whitespace-nowrap text-muted-foreground tabular-nums"
+      className="whitespace-nowrap font-mono text-xs text-muted-foreground"
       dateTime={new Date(timestamp * 1000).toISOString()}
       title={formatDateTime(timestamp)}
     >
@@ -231,25 +234,28 @@ export function CollectionActivityFeed({ address }: { address: string }) {
   return (
     <section aria-label="Collection activity" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div role="group" aria-label="Activity type" className="flex flex-wrap gap-2">
+        <div
+          role="group"
+          aria-label="Activity type"
+          className="market-segmented overflow-x-auto"
+        >
           {FILTERS.map((option) => {
             const pressed = option.value === filter;
             return (
-              <Button
+              <button
                 key={option.value}
                 type="button"
-                variant={pressed ? "default" : "outline"}
                 aria-pressed={pressed}
-                className="min-h-11"
+                className={SEGMENT_CLASS}
                 onClick={() => setFilter(option.value)}
               >
                 {option.label}
-              </Button>
+              </button>
             );
           })}
         </div>
         {query.data && (
-          <p className="text-xs text-muted-foreground tabular-nums">
+          <p className="market-label tabular-nums">
             Showing {events.length} {events.length === 1 ? "event" : "events"}
           </p>
         )}
@@ -275,11 +281,11 @@ export function CollectionActivityFeed({ address }: { address: string }) {
               <TableCaption className="sr-only">Collection activity</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Event</TableHead>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>From/To</TableHead>
-                  <TableHead>Time</TableHead>
+                  <TableHead className="market-label h-9">Event</TableHead>
+                  <TableHead className="market-label h-9">Item</TableHead>
+                  <TableHead className="market-label h-9">Price</TableHead>
+                  <TableHead className="market-label h-9">From/To</TableHead>
+                  <TableHead className="market-label h-9">Time</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -308,23 +314,23 @@ export function CollectionActivityFeed({ address }: { address: string }) {
               </TableBody>
             </Table>
           </div>
-          <ul className="space-y-3 md:hidden" aria-label="Collection activity">
+          <ul
+            className="divide-y divide-[color:var(--realm-border-etched)] overflow-hidden rounded-xl border border-[color:var(--realm-border-etched)] bg-muted/20 md:hidden"
+            aria-label="Collection activity"
+          >
             {events.map((event) => (
-              <li
-                key={event.id}
-                className="min-w-0 rounded-xl border border-[color:var(--realm-border-etched)] bg-muted/20 p-4 text-sm"
-              >
+              <li key={event.id} className="min-w-0 px-4 pt-3 pb-1 text-sm">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <EventBadge event={event} />
                   <EventTime timestamp={event.provenance.timestamp} now={now} />
                 </div>
-                <div className="mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <div className="flex min-h-11 flex-wrap items-center justify-between gap-x-3">
                   <ItemLink address={address} tokenId={event.tokenId} />
                   <span className="font-medium">
                     <EventPrice event={event} />
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center justify-between gap-x-3 text-xs">
+                <div className="flex min-h-11 flex-wrap items-center justify-between gap-x-3 text-xs">
                   <Participants event={event} />
                   <ExplorerLink chain={chain} hash={event.provenance.transactionHash} />
                 </div>

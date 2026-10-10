@@ -2,7 +2,7 @@
 import { CollectionBanner } from "./collection-banner";
 import { CollectionBrowseLayout } from "./collection-browse-layout";
 import { useSweepCandidates } from "./use-sweep-candidates";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { NormalizedToken } from "@/lib/marketplace/types";
 import {
   useCollectionQuery,
@@ -19,7 +19,6 @@ import {
   type ActiveFilters,
   type TraitSelection,
 } from "@/lib/marketplace/traits";
-import { animate, stagger } from "animejs";
 import dynamic from "next/dynamic";
 import { CollectionTokenGrid, type GridLayoutMode } from "@/features/collections/collection-token-grid";
 import { TraitFilterSidebar } from "@/features/collections/trait-filter-sidebar";
@@ -126,6 +125,7 @@ function collectionHeaderImage(metadata: unknown) {
 
 export function CollectionRouteView({
   address,
+  cursor,
   collections,
   activeFilters,
   sortMode = "price-asc",
@@ -199,36 +199,6 @@ export function CollectionRouteView({
   const sortOptions = collectionFilterConfig.sortOptions ?? DEFAULT_SORT_OPTIONS;
 
   // Hero entrance animation
-  const heroRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
-      hero.querySelectorAll<HTMLElement>(".hero-image, .hero-content > *").forEach((el) => {
-        el.style.opacity = "1";
-        el.style.transform = "none";
-      });
-      return;
-    }
-
-    const img = hero.querySelector<HTMLElement>(".hero-image");
-    if (img) {
-      animate(img, { opacity: [0, 1], duration: 600, ease: "easeOutCubic" });
-    }
-
-    const contentChildren = hero.querySelectorAll<HTMLElement>(".hero-content > *");
-    if (contentChildren.length > 0) {
-      animate(contentChildren, {
-        opacity: [0, 1],
-        translateY: [12, 0],
-        delay: stagger(60, { start: 300 }),
-        duration: 500,
-        ease: "spring(1, 120, 20, 0)",
-      });
-    }
-  }, [address]);
-
   const visibleTokens = visibleTokensByScope[sweepScopeKey] ?? EMPTY_VISIBLE_TOKENS;
 
   const sweepQuery = useSweepCandidates(address, resolvedActiveFilters);
@@ -287,24 +257,32 @@ export function CollectionRouteView({
       ? `Showing ${visibleTokens.length} item${visibleTokens.length === 1 ? "" : "s"}${canLoadMore ? ", more available" : ""}`
       : undefined;
 
+  // Chips summarise the filters in effect, so they sit directly under the controls they refine.
   const toolbar = (
-    <CollectionToolbar
-      query={query}
-      onQueryChange={(next) => onQueryChange?.(next)}
-      listedOnly={listedOnly}
-      onListedOnlyChange={(next) => onListedOnlyChange?.(next)}
-      sortMode={sortMode}
-      sortOptions={sortOptions}
-      onSortModeChange={(next) => onSortModeChange?.(next)}
-      layout={layout}
-      onLayoutChange={setLayout}
-      resultSummary={resultSummary}
-    />
+    <div className="space-y-3">
+      <CollectionToolbar
+        query={query}
+        onQueryChange={(next) => onQueryChange?.(next)}
+        listedOnly={listedOnly}
+        onListedOnlyChange={(next) => onListedOnlyChange?.(next)}
+        sortMode={sortMode}
+        sortOptions={sortOptions}
+        onSortModeChange={(next) => onSortModeChange?.(next)}
+        layout={layout}
+        onLayoutChange={setLayout}
+        resultSummary={resultSummary}
+      />
+      <ActiveFilterChips
+        activeFilters={resolvedActiveFilters}
+        onRemove={removeFilter}
+        onClear={() => onActiveFiltersChange?.({})}
+      />
+    </div>
   );
 
   return (
-    <section className="w-full space-y-4 pb-20">
-      <CollectionBanner ref={heroRef} image={headerImage} name={displayName ?? selectedCollection?.name ?? address}>
+    <section className="w-full space-y-8 pb-20">
+      <CollectionBanner image={headerImage} name={displayName ?? selectedCollection?.name ?? address}>
         <div className="flex w-full flex-col gap-3 lg:w-auto lg:items-end">
           <CurrencySwitcher label="Browse in" showBalance />
           <CollectionStatsStrip address={address} currency={currency} />
@@ -341,12 +319,8 @@ export function CollectionRouteView({
                 onOpenTraitNameChange={setOpenTraitName}
               />
           }>
-            <ActiveFilterChips
-              activeFilters={resolvedActiveFilters}
-              onRemove={removeFilter}
-              onClear={() => onActiveFiltersChange?.({})}
-            />
             <CollectionTokenGrid
+              cursor={cursor}
               key={sweepScopeKey}
               activeFilters={resolvedActiveFilters}
               address={address}
