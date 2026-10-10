@@ -182,6 +182,48 @@ rewinding through one restores its preceding state. See the
 [operations procedure](POSTGRES-OPERATIONS.md#fast-historical-mode-schema-v2)
 for deployment order, controls, evidence and compatible rollback.
 
+### Shared live block acquisition (#114, not yet wired)
+
+`services/marketplace-backend/src/block-acquisition.mjs` is the acquisition layer
+for discovered collections (epic #108). It is a library with tests and a
+synthetic benchmark; `scanRange` does not call it yet, and nothing here enables a
+collection for trading or changes the current registry, fast-history or checkout
+gates.
+
+- `SharedBlockReader.read(from, to, { parentHash })` reads each accepted block
+  once with `starknet_getBlockWithReceipts` (bounded batch size and concurrency),
+  so live provider work grows with blocks rather than blocks x collections. It
+  rejects pre-confirmed heads, height mismatches and conflicting receipt
+  identities, and reports `CHAIN_REORG` with the first height to rewind when a
+  block does not extend the stored head or its predecessor in the window.
+- Windows are bounded by `maxBlocksPerWindow`, `maxEventsPerWindow` and
+  `maxBytesPerWindow`; exceeding one fails with `ACQUISITION_BUDGET` before any
+  projection work. An optional `ReceiptCache` (bounded by blocks and bytes) is
+  shared by readers on one chain, for example a backfill worker and the live
+  reader. Cached blocks are trusted only after hash linkage succeeds; a broken
+  link evicts them and refetches once.
+- `routeWindow(window, { sources, decode, checkpoints })` routes events in
+  canonical (block, transaction, event) order with identities from 5.3. It
+  skips input at or below each source checkpoint (duplicates and restarts are
+  no-ops), rejects a non-canonical checkpoint, and returns
+  `SOURCE_BACKFILL_REQUIRED` for a source whose coverage starts before the
+  window, which keeps independent backfill (#113) separate from the live path.
+- A collection decode failure quarantines only that collection: events from the
+  failing block onward are withheld, its checkpoint stops at the previous block,
+  and the raw event, position, identity and error stay replayable. Other
+  collections keep advancing. Marketplace decode failures still fail the whole
+  window.
+- Unknown emitters using Transfer, ApprovalForAll, TransferSingle or
+  TransferBatch selectors become discovery candidates with first and last
+  positions. ERC-20 shares the Transfer selector, so a candidate is input to
+  classification (#111), never a collection.
+
+Callers commit routed events and the returned checkpoints in one transaction.
+`node services/marketplace-backend/bench/shared-acquisition.mjs` compares
+requests, bytes, routed events, DB writes, window time and heap growth against
+the per-source `starknet_getEvents` lower bound as collection and event counts
+grow. It uses a fake RPC; real provider lag and throughput are #118 evidence.
+
 ### 5.2 Decoders we own
 
 Support the versioned event ABI of our new marketplace and verified interfaces of the approved NFT collections. Do not build a generic smart-contract indexing framework.
