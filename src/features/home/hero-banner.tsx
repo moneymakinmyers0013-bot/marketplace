@@ -1,7 +1,7 @@
 import { MarketPrice } from "@/components/marketplace/market-price";
 import { StatTile } from "@/components/marketplace/stat-tile";
 
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { localImageProps } from "@/lib/marketplace/local-image";

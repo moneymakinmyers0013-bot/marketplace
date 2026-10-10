@@ -4,7 +4,7 @@ import { TokenMedia } from "@/components/marketplace/token-media";
 import { TokenSymbol } from "@/components/ui/token-symbol";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 import { ShoppingCart, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "../store/cart-store";
 import { useTrade } from "@/lib/marketplace/use-trade";

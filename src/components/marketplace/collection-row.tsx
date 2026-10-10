@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import type { NormalizedToken } from "@/lib/marketplace/types";
 import {
   useCollectionListingsQuery,

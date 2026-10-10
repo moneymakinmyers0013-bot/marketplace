@@ -1,7 +1,7 @@
 "use client";
 import { MarketPrice } from "@/components/marketplace/market-price";
 import { TokenMedia } from "@/components/marketplace/token-media";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { Button } from "@/components/ui/button";
 import type { CollectionCardData } from "./types";
 

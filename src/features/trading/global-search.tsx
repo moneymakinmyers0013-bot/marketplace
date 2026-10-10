@@ -1,6 +1,6 @@
 "use client";
 import { AssetGridSkeleton } from "@/components/marketplace/loading-state";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useQuery } from "@tanstack/react-query";
 import { marketplaceRequest, tokenFromApi } from "@/lib/marketplace/api-client";
 import type { ApiCollection, ApiToken } from "@/lib/marketplace/types";

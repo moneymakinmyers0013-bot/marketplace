@@ -1,6 +1,6 @@
 "use client";
 import { useId, useRef, useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { Clock3, HandCoins, Layers, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

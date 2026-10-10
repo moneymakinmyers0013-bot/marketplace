@@ -1,7 +1,7 @@
 "use client";
 import { ListSkeleton } from "@/components/marketplace/loading-state";
 import { WalletConnectButton } from "@/components/layout/wallet-connect-button";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWalletSession } from "@/lib/marketplace/use-wallet-session";

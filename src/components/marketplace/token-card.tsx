@@ -2,7 +2,7 @@
 import { MarketPrice } from "./market-price";
 
 import React, { useMemo } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import type { NormalizedToken } from "@/lib/marketplace/types";
 import {
   displayTokenId,

@@ -2,7 +2,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useRouter } from "next/navigation";
 import { useQueries } from "@tanstack/react-query";
 import { ArrowDown, ArrowUp, ArrowUpDown, BadgeCheck } from "lucide-react";

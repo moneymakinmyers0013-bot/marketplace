@@ -374,3 +374,9 @@ empty, wallet-required, rejected, unavailable and accepted states. Cart layouts
 were reviewed at 390/768/1440px. Home/collection entrance fades were removed so
 SSR content stays visible. The streamed-hydration regression test covers a query
 resolving before the browser's first render, without a duplicate browser fetch.
+
+`Marketplace/Intent navigation/Keyboard` checks the same link used by collection
+and token entry points. Its unit tests verify delayed/cancelled hover, immediate
+focus, network preference handling and bounded admission. The link was checked
+at 390/768/1440px. Full-route prefetch carries public query state; the link never
+prepares trading calls or authenticates a wallet.

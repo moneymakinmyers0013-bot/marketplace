@@ -419,48 +419,63 @@ one existing unused-variable warning in the Storybook trade mock. Checks used
 Node 22.23.1 locally; CI's required 22.23.3 remains a separate verification.
 Fixture home, collection and token layouts were reviewed at 390/768/1440px;
 wallet states remain story simulations. No deployment or real-wallet acceptance
-is claimed. Server-prefetch performance experiments remain investigation evidence
-under ignored `.context/perf/`; no performance prototype is integrated or launch
-latency target marked passed.
+is claimed. The original experiments remain under ignored `.context/perf/`; the reviewed
+implementation and measured limits are tracked below. No launch latency gate is
+marked passed.
 
 ### Page-delivery performance — 10 October 2026
 
-User authorized sequential local improvements with a commit after each priority.
-Priority 1 is implemented: reviewed WebP variants for seven bundled collection
-images, responsive selection for cards/thumbnails/banners, and eager high-priority
-hero loading. The originals total 21,586,372 bytes; the seven 256px variants total
-82,744 bytes. These are asset sizes, not a measured production load-time gain.
-`pnpm images:build` uses pinned development-only sharp 0.35.5; the backend media
-worker and external NFT URLs are unchanged. Image fallback/priority tests,
-relevant Storybook/a11y tests (38 combined tests), typecheck, lint and both builds
-pass. Artwork stories checked at 390/639/640/768/1440px; fixture home at
-390/768/1440px. Priority 2 is implemented: request-local public collection prefetching under
-Suspense, shared deployment-aware keys and URL-derived token queries, and a
-1.5-second cancellation budget. Prefetched assets render in server HTML before
-effects; the initial URL cursor is also passed to the grid. Reads use the SDK
-transport, preserve existing public snapshot freshness windows, and add no shared
-server cache of trading or authenticated state. Unit hydration/filter/currency/
-deployment/timeout checks and collection stories pass, as do typecheck, lint and
-both builds. Browser inspection of a filtered collection found only config and
-advisory sweep requests after hydration, with no repeated collection/token/stat
-reads. This is fixture integration evidence, not production latency validation.
-Priority 3 is implemented: home catalog/recent-sales/statistics and token public
-reads share browser/server query definitions. Primary content is prefetched with
-the 1.5-second budget; secondary queries stream through dehydrated promises with
-the SDK's existing 15-second per-read timeout. Home search skips unrelated catalog
-prefetch. Hydration, streaming and relevant feature tests pass; Storybook, app
-build, types and lint pass. In the fixture browser, home requests only current
-configuration after hydration; token keeps current configuration, authentication
-and its independent holder check. No real wallet request was made. Priority 4 is implemented: Controller loads only for explicit connection or
-remembered-session readiness; its core connector events and retry behavior are
-preserved. The cart's checkout body loads inside the opened sheet. Its trigger
-now participates in Radix focus restoration. Home and collection entrance fades
-no longer hide already-delivered content. A production-only streaming hydration
-race was reproduced and fixed: pending results attach after matching the initial
-markup, with query observers held until the server promises are installed.
-All 886 unit/Storybook tests, both builds, types and scoped lint pass. Production
-fixture browsing reports no hydration error or Controller iframe; real-wallet
-reconnect/signing remains unverified. Navigation prefetching is next.
+Implemented locally in the user-authorized priority order, with separate commits:
+
+1. Responsive WebP variants for seven bundled collection images, accurate card/
+   thumbnail sizes, and eager/high-priority heroes. `pnpm images:build` uses pinned
+   development-only sharp 0.35.5. Backend media processing and external NFT URLs
+   retain their existing behavior.
+2. Request-local collection prefetching with shared deployment-aware query keys,
+   URL filters/sort/cursor, a 1.5-second cancellation budget and server-rendered
+   assets. Currency and deployment changes cannot reuse a mismatched snapshot.
+3. Home and token public reads use shared query definitions. Primary content has
+   a bounded prefetch; secondary results stream through query promises using the
+   SDK's existing read timeout. Independent token reads start in parallel. Home
+   search skips unrelated catalog prefetch. Configuration/authentication and token
+   holder checks remain live. No authenticated state is shared-cached.
+4. Controller loads only for connection or remembered-session readiness. Checkout
+   content loads inside the opened cart sheet, with keyboard focus restoration.
+   Entrance fades no longer hide delivered content. A production hydration race
+   was reproduced and fixed: pending streamed data attaches after matching the
+   initial markup, with observers held until their promises are installed.
+5. Public collection/token links prepare full routes on deliberate hover, focus
+   or touch instead of viewport visibility. The route includes its query state;
+   there is no parallel browser API prefetch fan-out. Admission allows two new
+   destinations per second with bounded 30-second deduplication, and respects
+   data-saver/2G settings. Trait, activity, offer and cart links use the same rule.
+
+Local validation: **891 combined unit/Storybook interaction/accessibility tests**,
+Next.js and Storybook builds, typecheck and diff checks pass. Lint has one existing
+Storybook mock warning. Checks used Node 22.23.1; CI's 22.23.3 remains separate.
+Stories and fixture home/collection/token/cart layouts were checked at
+390/768/1440px, with artwork also around the 640px breakpoint. Browser checks cover
+hover prefetch, navigation, keyboard activation, drawer dismissal and restored
+focus. Deferred connector event/retry tests are simulated, not real-wallet checks.
+
+[Measurement evidence](evidence/page-delivery-2026-10-10.json): three-run medians,
+production builds against the same saved fixture, warmed server routes, fresh
+browser contexts, synthetic API delay. Throttling uses 4× CPU and 9Mbps/150ms
+network settings at a desktop viewport. “Content ready” is the harness's DOM/
+loading-region check; it does not certify complete artwork or interactive wallets.
+
+| Route | Desktop before → after | Throttled before → after |
+| --- | --- | --- |
+| Home | 1197 → 937 ms | 5263 → 1404 ms |
+| Collection | 649 → 637 ms | 3416 → 551 ms |
+| Token | 590 → 638 ms | 3044 → 1473 ms |
+
+Initial JS transfer fell roughly 15–17%. The desktop fixture home's measured image
+transfer fell from about 20MiB to 344KiB. Desktop collection readiness is effectively
+flat and token readiness is 48ms slower; no universal cold-load speedup is claimed.
+A separate local hover/navigation check opened collection assets in 116ms after
+prefetch, not a production SLA. Production load/latency and supported-wallet
+reconnect/signing remain open; these measurements do not close launch gates.
 
 ### Release preparation — 7 October 2026
 

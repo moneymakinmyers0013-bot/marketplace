@@ -1,7 +1,7 @@
 "use client";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { AssetGrid } from "@/components/marketplace/asset-grid";
 import { useMarketCurrency } from "@/lib/marketplace/currency-store";
 import { apiFiltersFromActiveFilters } from "@/lib/marketplace/browse-filters";

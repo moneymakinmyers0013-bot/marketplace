@@ -8,6 +8,7 @@ import { useRecentSales } from "@/features/home/use-recent-sales";
 import { useTokenDetailQuery } from "./hooks";
 import { useCollectionOffersQuery } from "./market-data";
 import { streamedPublicHydrationState } from "./server-hydration";
+import { TokenPageData } from "@/features/token/token-page-data";
 
 afterEach(() => vi.unstubAllGlobals());
 const token = { collection: "0xa", tokenId: "6", owner: "0x2", metadata: { name: "Realm #6" }, attributes: [], listings: [] };
@@ -73,4 +74,23 @@ it("delivers primary data while a secondary section is still fetching", async ()
   expect(secondary?.state.status).toBe("pending");
   finish("later");
   expect(await secondary?.promise).toBe("later");
+});
+
+it("starts independent token sections before the primary token read completes", async () => {
+  let release!: (response: Response) => void;
+  const primary = new Promise<Response>(resolve => { release = resolve; });
+  const request = vi.fn(async (input: string | URL | Request) => {
+    const path = new URL(String(input), "http://localhost").pathname;
+    if (path.endsWith("/tokens/0xa/6")) return primary;
+    return new Response(JSON.stringify({ data: path.endsWith("/traits") ? [] : path.endsWith("/0xa") ? collection : { items: [], nextCursor: null } }));
+  });
+  vi.stubGlobal("fetch", request);
+  const rendering = TokenPageData({ address: "0xa", tokenId: "6" });
+  try {
+    expect(request.mock.calls.some(([url]) => String(url).includes("/offers?"))).toBe(true);
+  } finally {
+    release(new Response(JSON.stringify({ data: token })));
+    await rendering;
+  }
+  expect(request.mock.calls.filter(([url]) => String(url).includes("/offers?"))).toHaveLength(1);
 });

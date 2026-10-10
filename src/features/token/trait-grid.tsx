@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import {
   ResourceIcon,
   resolveResourceIcon,

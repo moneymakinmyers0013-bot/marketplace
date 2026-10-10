@@ -3,7 +3,7 @@ import { AssetGridSkeleton, ListSkeleton } from "@/components/marketplace/loadin
 import { WalletConnectButton } from "@/components/layout/wallet-connect-button";
 import { formatCurrencyAmount } from "@/lib/marketplace/amount-display";
 import { useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { useQuery } from "@tanstack/react-query";
 import { useTrade } from "@/lib/marketplace/use-trade";
 import { marketplaceRequest, tokenFromApi } from "@/lib/marketplace/api-client";

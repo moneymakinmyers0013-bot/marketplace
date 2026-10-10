@@ -5,7 +5,7 @@ import {
 } from "@/components/marketplace/loading-state";
 
 import { useId, useState } from "react";
-import Link from "next/link";
+import { MarketplaceLink as Link } from "@/components/marketplace/marketplace-link";
 import { ChevronLeft } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { prepareCancellation } from "@biblio/marketplace";
